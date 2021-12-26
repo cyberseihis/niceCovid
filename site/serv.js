@@ -40,7 +40,7 @@ mongoClient.connect('mongodb+srv://panos:5555p@cluster30.et1yr.mongodb.net/test'
     app.use("/static",express.static("/home/dabbing/Documents/vscopium/niceCovid/site/"))
     // app.use("/search",cors());
     app.use("/api",bodyParser.urlencoded({ extended: false }),bodyParser.json());
-    app.post("/api/pois",async function(req,res){
+    app.get("/api/pois",async function(req,res){
         res.json(await searchPOIs(req.query.type,[38.2379767, 21.7259916]));
         res.end();
     })
