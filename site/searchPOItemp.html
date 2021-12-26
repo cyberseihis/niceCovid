@@ -1,40 +1,21 @@
 <!DOCTYPE html>
 <head>
   <title>lmso</title>
-
 </head>
 <body>
   <!-- action="http://localhost:4545/search" -->
-  <form
-    name="searchForm"
-    method="post"
-    id="searchForm"
-    enctype="multipart/form-data"
-  >
-    <input type="text" name="searchBar" id="searchBar"/>
+<!-- method="post" -->
+  <form name="searchForm" 
+    id="searchForm" enctype="multipart/form-data" >
+    <input type="text" name="searchBar" id="searchBar" />
     <!-- <input type="button" name="sup" onclick="fetchSearchPOIs()"> -->
     <input type="submit" value="4" />
   </form>
   <script>
-    function fetchSearchPOIs() {
-      var poiForm = document.getElementById("searchForm");
-      poiForm.addEventListener(
-        "submit",
-        function (ev) {
-          var poiFormData = new FormData(poiForm);
-          console.log("reee", poiFormData);
-          fetch("http://localhost:4545/search", {
-            method: "POST",
-            body: poiFormData,
-          })
-            // .then(res=>res.json())
-            .then((res) => console.log("WOWOW", res))
-            .catch((err) => console.error(err));
-          ev.preventDefault();
-        },
-        false
-      );
-    }
-    fetchSearchPOIs();
+    document.getElementById("searchForm").addEventListener("submit", (ev) => {
+      console.log(document.getElementById("searchBar").value);
+
+      ev.preventDefault();
+    });
   </script>
 </body>
