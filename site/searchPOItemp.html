@@ -5,20 +5,22 @@
 <body>
   <!-- action="http://localhost:4545/search" -->
   <!-- method="post" -->
-  <form name="searchForm" id="searchForm" enctype="multipart/form-data">
+  <form name="searchForm" id="searchForm">
     <input type="text" name="searchBar" id="searchBar" />
-    <!-- <input type="button" name="sup" onclick="fetchSearchPOIs()"> -->
     <input type="submit" value="4" />
   </form>
   <script>
-    document.getElementById("searchForm").addEventListener("submit", (ev) => {
-      var type = document.getElementById("searchBar").value;
-      console.log(type);
-      fetch(`http://localhost:4545/api/pois?type=${type}`)
-        .then((res) => res.json())
-        .then((res) => console.log(res))
-        .catch((er) => console.error(er));
-      ev.preventDefault();
-    });
+    document
+      .getElementById("searchForm")
+      .addEventListener("submit", async function (ev) {
+        var type = document.getElementById("searchBar").value;
+        console.log(type);
+        var poiz= await fetch(`http://localhost:4545/api/pois?type=${type}`)
+          .then((res) => res.json())
+          .then((res) => console.log(res))
+          .catch((er) => console.error(er));
+        console.log("pois:",poiz);
+        ev.preventDefault();
+      });
   </script>
 </body>
