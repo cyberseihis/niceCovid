@@ -14,7 +14,7 @@ var tiles = L.tileLayer(
 ).addTo(map);
 
 function addMarker(poi) {
-  mrk = L.marker(Object.values(poi.coordinates));
+  mrk = L.marker(Object.values(poi.coordinates),{icon:iconFromPopularity(55)});
   mrk.addTo(map);
 }
 
@@ -23,6 +23,21 @@ function updateMap(pois) {
     addMarker(poi);
   });
 }
+
+function iconFromPopularity(people) {
+	var icon=new baseMarkerIcon({iconUrl: '/static/mapIcons/markerIconRed.png'})
+	return icon;
+}
+var baseMarkerIcon = L.Icon.extend({
+  options: {
+    shadowUrl: "/static/mapIcons/markerIconBlue.png",
+    iconSize: [32,32],
+    shadowSize: [0, 0],
+    iconAnchor: [16,0],
+    shadowAnchor: [0, 0],
+    popupAnchor: [128, 64],
+  },
+});
 
 document
   .getElementById("searchForm")
@@ -37,8 +52,9 @@ document
     updateMap(poiz);
   });
 
-navigator.geolocation
-  ? navigator.geolocation.getCurrentPosition((geo) => {
-      myLocation = [geo.coords.latitude, geo.coords.longitude];
-    })
-  : alert("cant get postition");
+// NOT USED DURING TESTING
+// navigator.geolocation
+//   ? navigator.geolocation.getCurrentPosition((geo) => {
+//       myLocation = [geo.coords.latitude, geo.coords.longitude];
+//     })
+//   : alert("cant get postition");
