@@ -1,5 +1,6 @@
 const mongo=require("mongodb");
 const mongoClient = mongo.MongoClient;
+const dayjs = require('dayjs')
 
 module.exports = {
     User_insertion : User_insertion,
@@ -11,9 +12,22 @@ module.exports = {
     adjacent_visitors: adjacent_visitors,
     temporaly_sick: temporaly_sick,
     recent_covid : recent_covid,
-    edit_user : edit_user
+    are_you_a_threat : are_you_a_threat,
+    edit_user : edit_user,
+    change_POIs : change_POIs,
+    json_file_function : json_file_function,
+    delete_POIs : delete_POIs,
+    total_count_visits : total_count_visits,
+    total_count_covids : total_count_covids,
+    dangerous_visits : dangerous_visits,
+    sortPOI_types : sortPOI_types,
+    sort_dangerous_POI_types : sort_dangerous_POI_types,
+    //visit_count_per_day : visit_count_per_day,
+    //dangerous_visit_count_per_day : dangerous_visit_count_per_day
 }
-  
+
+//USER
+
 function User_insertion(db,usr_name,usr_email,usr_password){  
     var myobj = { name: usr_name , password: usr_password , email: usr_email};
     db.collection("User").insertOne(myobj, function(err, res) {
@@ -63,14 +77,11 @@ function check_within_14_days(db,User_Id){
 }
 
 function recent_visits(db,User_Id){
-    
     let date = new Date();
-    date.setDate(date.getDate() - 7)
+    date.setDate(date.getDate() - 7);
     var myobj = {user_id: User_Id, timestamp:{$gte:date,$lt : new Date()}};
-    var result = db.collection("Visit").find(myobj).toArray(function(err, res) {
-        if (err) throw err;
-        console.log(res);
-    })
+    var result = db.collection("Visit").find(myobj).toArray();
+    return result;
 }
 
 function adjacent_visitors(db,POI_Id,covid_time){
@@ -79,9 +90,7 @@ function adjacent_visitors(db,POI_Id,covid_time){
     dp = new Date(d.getTime());
     d.setHours(hour - 2);
     dp.setHours(hour + 2);
-    var myobj = { 
-        POI_id: POI_Id,timestamp:{$gte:d,$lt : dp}
-      };
+    var myobj = {POI_id: POI_Id,timestamp:{$gte:d,$lt : dp}};
       db.collection('Visit').find(myobj).toArray(function(err, res) {
         if (err) throw err;
         console.log(res);
@@ -93,13 +102,23 @@ function temporaly_sick(db,UserId,covidTime){
     let date_d = d.getDate();
     dp = new Date(d.getTime());
     dp.setDate(date_d + 7);
-    var myobj = { 
-        user_id: UserId,Date:{$gte:d,$lt : dp}
-      };
+    var myobj = {user_id: UserId,Date:{$gte:d,$lt : dp}};
       db.collection('Covid_case').find(myobj).toArray(function(err, res) {
         if (err) throw err;
         console.log(res);
 })
+}
+
+function are_you_a_threat(db,User_id){
+    recent_visits(db,User_id).then(rec_visit=>{
+    for (i=0;i<rec_visit.length;i++){
+        adjacent_visitors(db,POI_Id,timestamp)
+    }
+}
+    ).then(adj_visitors=>{
+    temporaly_sick(db,UserId,covidTime)    
+}
+    )
 }
 
 function recent_covid(db,UseriD){
@@ -117,4 +136,145 @@ function edit_user(db,Usrid,user_name,user_pass){
         if (err) throw err;
         console.log("User details changed");
     })
+}
+
+//ADMIN
+
+function change_POIs(db,jsonPOI){
+    db.collection("POIs").updateOne({id : jsonPOI.id},{"$set":jsonPOI},
+    {
+        "upsert":true
+    },
+    function(err, res) {
+        if (err) throw err;
+        console.log("POI details changed");
+    })
+}
+
+function json_file_function(db,path){
+    const fs = require('fs');
+    var data = JSON.parse(fs.readFileSync(path));
+    for (let i=0; i<data.length;i++){
+        change_POIs(db,data[i]);
+    }
+}
+
+function delete_POIs(db){
+    db.collection("POIs").remove(
+        {},function(err, res) {
+            if (err) throw err;
+            console.log("All POIs removed");
+        })
+}
+
+function total_count_visits(db){
+    var num = db.collection("Visit").count();
+    return num;
+}
+
+function total_count_covids(db){
+    var num = db.collection("Covid_case").count();
+    return num;
+}
+
+function dangerous_visits(db){
+    db.collection('Covid_case').aggregate([
+        { $lookup:
+           {
+             from: 'Visit',
+             localField: 'user_id',
+             foreignField: 'user_id',
+             as: 'dangerousVisits'
+           }
+         },
+         { $addFields: { vis: { $first: "$dangerousVisits" } } },
+         { $project : { _id : 0, vis :1}},
+         {$project :{ vis: { $and: [ { $gt: [ "$timestamp", "Covid_case.Date" + 14 ] }, { $lt: [ "$timestamp", "Covid_case.Date" - 7] } ] }}}
+        ]).toArray(function(err, res) {
+        if (err) throw err;
+        console.log(res);
+})
+}
+
+function sortPOI_types(db){
+    db.collection('Visit').aggregate([
+        { $lookup:
+           {
+             from: 'POIs',
+             localField: 'POI_id',
+             foreignField: '_id',
+             as: 'same_pois'
+           }
+         },
+         { $addFields: { Bpoi: { $first: "$same_pois" } } },
+         {
+            $project : { _id : 0, Bpoi :1}
+         },
+         {$addFields: {ffr: "$Bpoi.types"}},
+         {$project : {ffr :1}},
+         { $unwind : '$ffr' },
+         { $group : { _id : '$ffr', totaldocs : { $sum : 1 } } },
+         { $sort : { 'totaldocs' : -1 } }
+        ]).toArray(function(err, res) {
+        if (err) throw err;
+        console.log(res);
+})
+}
+
+function sort_dangerous_POI_types(){
+    db.collection('Visit').aggregate([
+        { $lookup:
+            {
+              from: 'Covid_case',
+              localField: 'user_id',
+              foreignField: 'user_id',
+              as: 'dangerous_visits'
+            }
+        },
+        { $unwind : '$dangerous_visits' },
+        {$addFields: {covdat: "$dangerous_visits.Date"}},
+        {
+            $project : { _id : 0, covdat :1, POI_id : 1, timestamp:1,
+                weeksick : {$dateSubtract:
+                    {
+                       startDate: "$covdat",
+                       unit: "day",
+                       amount: 7
+                    }},
+                doublesick : {$dateAdd:
+                    {
+                       startDate: "$covdat",
+                       unit: "day",
+                       amount: 14
+                    }}
+            }
+         },
+         {$match:{$and:[{$expr:{$gt:["$timestamp", "$weeksick"]}},{$expr:{$lt:["$timestamp", "$doublesick"]}}]}},
+         { $lookup:
+            {
+              from: 'POIs',
+              localField: 'POI_id',
+              foreignField: '_id',
+              as: 'same_pois'
+            }
+          },
+          { $addFields: { Bpoi: { $first: "$same_pois" } } },
+          {
+             $project : { _id : 0, Bpoi :1}
+          },
+          {$addFields: {ffr: "$Bpoi.types"}},
+          {$project : {ffr :1}},
+          { $unwind : '$ffr' },
+          { $group : { _id : '$ffr', totaldocs : { $sum : 1 } } },
+          { $sort : { 'totaldocs' : -1 } }
+         
+
+        ]).toArray(function(err, res) {
+        if (err) throw err;
+        console.log(res);
+})
+
+    function visit_count_per_day(db){}
+    function dangerous_visit_count_per_day(db){}
+
 }
