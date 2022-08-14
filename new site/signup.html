@@ -1,21 +1,28 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="tinakanw.js"></script>
 
-<form id="nice_form" name="nice_form" method="post">
+<p id="p1">signup</p>
+<form id="log_form" name="nice_form" method="post">
     username:
-    <input name="user" type="text" value="deez">
+    <input name="user" type="text">
     password:
-    <input name="piss" type="text">
+    <input name="pass" type="text">
+    email:
+    <input name="email" type="text">
     <input id="epibebaiosi" type="submit">
 </form>
 <script>
-    var vorm = document.getElementById('nice_form');
+    var vorm = document.getElementById('log_form');
     vorm.addEventListener('submit', function (ev) {
         let vormData = new FormData(vorm);
         lmao = Object.fromEntries(vormData);
-        axios.post('http://localhost:4545/s', lmao)
+        axios.post('http://localhost:4545/sign', lmao)
             .then(function (response) {
                 console.log(response.data);
+                if(response.data==""){
+                document.getElementById("p1").innerHTML = "Wrong credentials";
+                } else{
+                   
+                }
             })
             .catch(function (error) {
                 console.log(error);

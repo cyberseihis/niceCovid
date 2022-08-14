@@ -6,6 +6,7 @@ const cors = require('cors');
 const mongoClient = mongo.MongoClient;
 let db;
 let POICollection;
+var tools = require('C:/Users/alekk/OneDrive/Desktop/js/functions.js');
 
 mongoClient.connect('mongodb+srv://panos:5555p@cluster30.et1yr.mongodb.net/test')
   .then(client => {
@@ -14,12 +15,23 @@ mongoClient.connect('mongodb+srv://panos:5555p@cluster30.et1yr.mongodb.net/test'
     POICollection = db.collection('exmpl1')
     
 
-    app.use("/s",cors());
-    app.use("/s",bodyParser.urlencoded({ extended: false }),bodyParser.json());
-    app.post("/s",async function(req,res){
+    app.use("/login",cors());
+    app.use("/login",bodyParser.urlencoded({ extended: false }),bodyParser.json());
+    app.post("/login",async function(req,res){
         //res.json(await searchPOIs(req.body.searchBar,[38.2379767, 21.7259916]));
-        console.log(req);
-        res.end();
+        console.log(req.body.user);
+        console.log(req.body.pass);
+        tools.Check_creds(db,req.body.user,req.body.pass).then(res.send.bind(res));
+       
+        //res.end();
+    })
+
+    app.use("/sign",cors());
+    app.use("/sign",bodyParser.urlencoded({ extended: false }),bodyParser.json());
+    app.post("/sign",async function(req,res){
+      
+      let hmm=  tools.User_insertion(db,req.body.user,req.body.email,req.body.pass)
+      res.send(hmm)
     })
 
     app.listen(4545);

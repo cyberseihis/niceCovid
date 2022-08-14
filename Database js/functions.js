@@ -22,16 +22,24 @@ module.exports = {
     dangerous_visits : dangerous_visits,
     sortPOI_types : sortPOI_types,
     sort_dangerous_POI_types : sort_dangerous_POI_types,
-    //visit_count_per_day : visit_count_per_day,
-    //dangerous_visit_count_per_day : dangerous_visit_count_per_day
+    visit_count_per_day : visit_count_per_day,
+    dangerous_visit_count_per_day : dangerous_visit_count_per_day,
+    Check_creds: Check_creds
 }
 
 //USER
 
+function Check_creds(db,usr_name,usr_password){
+    var myobj = { name: usr_name , password: usr_password};
+    let hm = db.collection("User").findOne(myobj);
+    return hm
+}
+
+
 function User_insertion(db,usr_name,usr_email,usr_password){  
     var myobj = { name: usr_name , password: usr_password , email: usr_email};
     db.collection("User").insertOne(myobj, function(err, res) {
-    if (err) throw err;
+    //if (err) throw err;
     console.log("1 user inserted");
 })
 }
@@ -178,18 +186,35 @@ function total_count_covids(db){
 }
 
 function dangerous_visits(db){
-    db.collection('Covid_case').aggregate([
+    db.collection('Visit').aggregate([
         { $lookup:
            {
-             from: 'Visit',
+             from: 'Covid_case',
              localField: 'user_id',
              foreignField: 'user_id',
              as: 'dangerousVisits'
            }
          },
-         { $addFields: { vis: { $first: "$dangerousVisits" } } },
-         { $project : { _id : 0, vis :1}},
-         {$project :{ vis: { $and: [ { $gt: [ "$timestamp", "Covid_case.Date" + 14 ] }, { $lt: [ "$timestamp", "Covid_case.Date" - 7] } ] }}}
+        { $unwind : '$dangerousVisits' },
+        {$addFields: {coviddat: "$dangerousVisits.Date"}},
+        {
+            $project : { _id : 0, coviddat :1, timestamp:1,
+                weeksick : {$dateSubtract:
+                    {
+                       startDate: "$coviddat",
+                       unit: "day",
+                       amount: 7
+                    }},
+                doublesick : {$dateAdd:
+                    {
+                       startDate: "$coviddat",
+                       unit: "day",
+                       amount: 14
+                    }}
+            }
+        },
+        {$match:{$and:[{$expr:{$gt:["$timestamp", "$weeksick"]}},{$expr:{$lt:["$timestamp", "$doublesick"]}}]}},
+        { $count : 'total_covid_visits' }
         ]).toArray(function(err, res) {
         if (err) throw err;
         console.log(res);
@@ -273,8 +298,76 @@ function sort_dangerous_POI_types(){
         if (err) throw err;
         console.log(res);
 })
-
-    function visit_count_per_day(db){}
-    function dangerous_visit_count_per_day(db){}
-
 }
+
+function visit_count_per_day(db){
+        db.collection('Visit').aggregate([
+            {$group:{ _id:{$dateToString:{format: "%Y-%m-%d", date: "$timestamp"}}, numberOfVisits:{ $sum: 1}}},
+    ]).toArray(function(err, res) {
+        if (err) throw err;
+        console.log(res);
+})
+}
+
+function dangerous_visit_count_per_day(db){
+    db.collection('Visit').aggregate([
+    { $lookup:
+        {
+          from: 'Covid_case',
+          localField: 'user_id',
+          foreignField: 'user_id',
+          as: 'cov_cases'
+        }
+    },
+    { $unwind : '$cov_cases' },
+    {$addFields: {coviddat: "$cov_cases.Date"}},
+        {
+            $project : { _id : 0, coviddat :1, timestamp:1,
+                weeksick : {$dateSubtract:
+                    {
+                       startDate: "$coviddat",
+                       unit: "day",
+                       amount: 7
+                    }},
+                doublesick : {$dateAdd:
+                    {
+                       startDate: "$coviddat",
+                       unit: "day",
+                       amount: 14
+                    }}
+            }
+        },
+        {$match:{$and:[{$expr:{$gt:["$timestamp", "$weeksick"]}},{$expr:{$lt:["$timestamp", "$doublesick"]}}]}},
+        {$group:{ _id:{$dateToString:{format: "%Y-%m-%d", date: "$cov_cases.timestamp"}},numberOfDangerousVisits:{ $sum: 1}}},
+        {$project : {_id : 0,numberOfDangerousVisits : 1}}
+    ]).toArray(function(err, res) {
+       if (err) throw err;
+       console.log(res);
+})
+}
+
+/*function dangerous_visit_count_per_day2(db){
+    db.collection('Covid_case').aggregate([
+    { $lookup:
+        {
+          from: 'Visit',
+          localField: 'user_id',
+          foreignField: 'user_id',
+          as: 'cov_cases'
+        }
+    },
+    { $unwind : '$cov_cases' },
+
+    {$group:{ _id:{$dateToString:{format: "%Y-%m-%d", date: "$dangerous_visits.timestamp"}},numberOfDangerousVisits:{ $sum: 1}}}
+    ]).toArray(function(err, res) {
+       if (err) throw err;
+       console.log(res);
+})
+}*/
+
+
+
+
+
+
+
