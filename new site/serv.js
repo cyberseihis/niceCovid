@@ -12,7 +12,7 @@ mongoClient.connect('mongodb+srv://panos:5555p@cluster30.et1yr.mongodb.net/test'
   .then(client => {
     
     db = client.db('example')
-    POICollection = db.collection('exmpl1')
+    POICollection = db.collection('POIs')
     
 
     app.use("/login",cors());
@@ -30,8 +30,16 @@ mongoClient.connect('mongodb+srv://panos:5555p@cluster30.et1yr.mongodb.net/test'
     app.use("/sign",bodyParser.urlencoded({ extended: false }),bodyParser.json());
     app.post("/sign",async function(req,res){
       
-      let hmm=  tools.User_insertion(db,req.body.user,req.body.email,req.body.pass)
-      res.send(hmm)
+      tools.User_insertion(db,req.body.user,req.body.email,req.body.pass).then(res.send.bind(res)).catch(xx=>{res.send("error_dup")})
+      
+    })
+
+    app.use("/poi",cors());
+    app.use("/poi",bodyParser.urlencoded({ extended: false }),bodyParser.json());
+    app.post("/poi",async function(req,res){
+      
+      POICollection.find().limit(5).toArray().then(res.send.bind(res))
+      
     })
 
     app.listen(4545);

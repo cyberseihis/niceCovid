@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<head>
+    <title>lmso</title>
+    <script>
+        function fetchSearchPOIs(){
+            var poiForm = document.forms.namedItem("searchForm");
+            poiForm.addEventListener('submit', function(ev) {
+            var poiFormData=new FormData(poiForm);
+            console.log("reee",poiFormData)
+            fetch("http://localhost:4545/search",{
+                method:"POST",
+                body:poiFormData
+            })
+            // .then(res=>res.json())
+            .then(res=>console.log("WOWOW",res))
+            .catch(err=>console.error(err));
+            ev.preventDefault();
+        },false);
+            
+        }
+    </script>
+</head>
+<body>
+    <!-- action="http://localhost:4545/search" -->
+    <form name="searchForm" method="post" id="searchForm" enctype="multipart/form-data">
+        <input type="search" name="searchBar">
+        <!-- <input type="button" name="sup" onclick="fetchSearchPOIs()"> -->
+        <input type="submit" value="ok">
+    </form>
+</body>

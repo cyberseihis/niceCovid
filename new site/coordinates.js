@@ -7,3 +7,5 @@ var tiles = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}
 		tileSize: 512,
 		zoomOffset: -1
 	}).addTo(map);
+
+	

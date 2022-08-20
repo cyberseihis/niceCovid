@@ -10,6 +10,9 @@
     <input name="email" type="text">
     <input id="epibebaiosi" type="submit">
 </form>
+
+<a href="login.html">Login</a>
+
 <script>
     var vorm = document.getElementById('log_form');
     vorm.addEventListener('submit', function (ev) {
@@ -18,10 +21,11 @@
         axios.post('http://localhost:4545/sign', lmao)
             .then(function (response) {
                 console.log(response.data);
-                if(response.data==""){
-                document.getElementById("p1").innerHTML = "Wrong credentials";
+                if(response.data=="error_dup"){
+                document.getElementById("p1").innerHTML = "There was an error!";
                 } else{
-                   
+                    document.getElementById("p1").innerHTML = "Account created!";
+
                 }
             })
             .catch(function (error) {
