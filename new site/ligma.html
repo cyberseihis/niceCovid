@@ -1,42 +1,98 @@
 <!DOCTYPE html>
 <head >
-    <title>MAP</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <title>Main page</title>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
     integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
     crossorigin=""/>
+    <link href='https://fonts.googleapis.com/css?family=Arial' rel='stylesheet'>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
    crossorigin=""></script>
    <style>
    li {
     display: inline;
-    margin: 15px;
-  }</style>
+    margin: 0px;
+  }
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+li a {
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+li a:hover {
+  background-color: rgb(128, 159, 205);
+}
+.active {
+  background-color: rgb(87, 87, 230);
+}
+li {
+  border-right: 1px solid #bbb;
+}
+
+  body {background-color: #ffffff; font-family: 'Arial'}
+  /*hr { display: block;  overflow: hidden; border-style: inset; border-width: 1px;}
+  hr {width: 60%;margin-left: auto;margin-right: auto;}*/
+  .para
+	{
+        color: rgb(44, 44, 68);
+	    font-size: 30px;
+        font-weight: bold;	
+	}
+div.outset {border-style: outset;}
+ </style>
 </head>
 <body>
-    <p style="text-align: center;">
-        Site for covid tracing.
-
+    <p style="text-align: center;" class="para" >
+        Website for Covid tracing
     </p>
     <p id="sss">username_placehold</p>
-    <div>
+    <div style="text-align:center" >
         <ul>
-            <li><a href="ligma.html">Map</a></li>
-            <li><a href="report.html">Δηλωση κρουσματος</a></li>
-            <li><a href="contacts.html">πιθανες επαφες</a></li>
-            <li><a href="user_settings.html">user settings</a></li>
+            <li><a href="ligma.html" class="active">Home</a></li>
+            <li><a href="report.html"> Covid Case Report</a></li>
+            <li><a href="contacts.html">Possible Contacts</a></li>
+            <li><a href="user_settings.html">User Settings</a></li>
+            <!--<li><a href="about.html">About us</a></li> Να βγαινει ενα popup που θα δινει καποιες πληροφοριες για την ιστοσελιδα μας-->
           </ul>
     </div>
+    
+<p id="p2">Search for POIs</p>
+<form id="srch_form" name="nice_form" method="post">
+    <input name="poitype" type="text">
+    <input id="epibebaiosi" type="submit">
+</form>
     <div id="map" style="height: 350px;">
-        
-          
+     
+    </div>
+    <div id = "popup">
+        <p id="poiname"></p>
+        population next 2 hours:
+        <p id="poptimes"></p>
+        visits last 2 hours:
+        <p id="nvisits"></p>
+        <div id="twentym">
+            Register visit
+            <form id="visit_form" name="nice_form" method="post">
+                <input name="popnum" type="number">
+                <input id="epibebaiosi" type="submit">
+            </form>
+        </div>
     </div>
     <script src= "coordinates.js"></script>
     <script>
-        var greenicon = L.divIcon({html: "<div style=\"background-color:green;width: 100%;height: 100%;\"></div>"});
-        var orangeicon = L.divIcon({html: "<div style=\"background-color:orange;width: 100%;height: 100%;\"></div>"});
-        var redicon = L.divIcon({html: "<div style=\"background-color:red;width: 100%;height: 100%;\"></div>"});
+
+        var greenicon = L.divIcon({html: "<div style=\"background-color:green;border:3px solid rgba(255,255,255,0.5);width: 100%;height: 100%;border-radius:50%;line-height:30px;\"></div>",className: 'circle'});
+        var orangeicon = L.divIcon({html: "<div style=\"background-color:orange;border:3px solid rgba(255,255,255,0.5);width: 100%;height: 100%;border-radius:50%;line-height:30px;\"></div>",className: 'circle'});
+        var redicon = L.divIcon({html: "<div style=\"background-color:red;border:3px solid rgba(255,255,255,0.5);width: 100%;height: 100%;border-radius:50%;line-height:30px;\"></div>",className: 'circle'});
 
         function poi2icon(pi){
             d = new Date();
@@ -51,7 +107,7 @@
         var marks = [];
         var favoriteMovie = sessionStorage.getItem('favoriteMovie');
         document.getElementById("sss").innerHTML = favoriteMovie;
-        axios.post('http://localhost:4545/poi', {})
+        /*axios.post('http://localhost:4545/poi', {})
             .then(function (response) {
                 for(pooi of response.data){
                 cords = [pooi.coordinates.lat,pooi.coordinates.lng]
@@ -60,6 +116,106 @@
                 h.on('click', e=>{console.log(e.target.alt)});
                 marks.push(h)
                 }
+            })*/
+    </script>
+    <script>
+        var globalpoi;
+
+        function getDistanceFromLatLonInm(lat1, lon1, lat2, lon2) {
+  var R = 6371; // Radius of the earth in km
+  var dLat = deg2rad(lat2-lat1);  // deg2rad below
+  var dLon = deg2rad(lon2-lon1); 
+  var a = 
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+    Math.sin(dLon/2) * Math.sin(dLon/2)
+    ; 
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  var d = R * c; // Distance in km
+  return d*1000;
+}
+
+function deg2rad(deg) {
+  return deg * (Math.PI/180)
+}
+
+
+        async function nVI(poy_id){
+            axios.post('http://localhost:4545/nvisit', {pid: poy_id})
+            .then(function (response) {
+                console.log(JSON.stringify( response.data));
+                document.getElementById("nvisits").innerHTML = response.data.length;
             })
+        }
+
+        async function popupmanager(e){
+            poy = e.target.alt;
+            document.getElementById("poiname").innerHTML = poy.name;
+
+            window.globalpoi=poy._id;
+
+            d = new Date();
+            let day = (7+ d.getDay() -1)%7;
+            let hour = d.getHours();
+            pop=poy.populartimes[day].data[hour];
+            j= new Date(d.getTime());
+            j.setHours(hour + 1);
+            day = (7+ j.getDay() -1)%7;
+            hour = j.getHours();
+            pop2=poy.populartimes[day].data[hour];
+            document.getElementById("poptimes").innerHTML = pop + "," + pop2;
+
+            nVI(poy._id);
+
+            navigator.geolocation.getCurrentPosition(gp=>{
+                
+                //dist= getDistanceFromLatLonInm(gp.coords.latitude,gp.coords.longitude,poy.coordinates.lat,poy.coordinates.lng)
+                dist= getDistanceFromLatLonInm(38.234853,21.7243963,poy.coordinates.lat,poy.coordinates.lng)
+                console.log(dist)
+                if(dist>200)
+                document.getElementById("twentym").style="display:none"; 
+                else document.getElementById("twentym").style="display:block";
+            })
+        }
+
+        var vorm = document.getElementById('srch_form');
+        vorm.addEventListener('submit', function (ev) {
+            let vormData = new FormData(vorm);
+            lmao = Object.fromEntries(vormData);
+            axios.post('http://localhost:4545/searchpoi', lmao)
+                .then(function (response) {
+                    for(pooi of response.data){
+                cords = [pooi.coordinates.lat,pooi.coordinates.lng]
+                let h = L.marker (cords, {icon: poi2icon(pooi)}).addTo(map);
+                h.alt = pooi;
+                h.on('click', e=>{console.log(e.target.alt); popupmanager(e)});
+                marks.push(h)
+                    }
+                    
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+    
+            ev.preventDefault();
+        }, false);
+    
+        var varm = document.getElementById('visit_form');
+        varm.addEventListener('submit', function (ev) {
+            let vormData = new FormData(varm);
+            lmao = Object.fromEntries(vormData);
+            lmao.poivisti = window.globalpoi;
+            lmao.userid="62fbe306f51865ef0a0f527c"
+            axios.post('http://localhost:4545/visitor', lmao)
+                .then(function (response) {
+                    console.log(response.data)
+                    
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+    
+            ev.preventDefault();
+        }, false);
     </script>
 </body>

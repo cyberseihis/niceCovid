@@ -1,19 +1,124 @@
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<!DOCTYPE html>
+<head >
+  <title>SignUp</title>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <link href='https://fonts.googleapis.com/css?family=Asap' rel='stylesheet'>
+  <style>
+    
+  body {background-color: #E0E0E0; font-family: 'Asap';}
+    .button {
+  background-color: #008CBA;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 2px 2px;
+  cursor: pointer;
+  border-radius: 12px;
+   }
 
-<p id="p1">signup</p>
+    .split {
+    height: 100%;
+    width: 50%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    overflow-x: hidden;
+    padding-top: 20px;
+  }
+  
+  .left {
+    left: 0;
+    background-color: rgb(255, 255, 255);
+  }
+  
+  .right {
+    right: 0;
+    background-color: #ECECEC;
+  }
+  .centered {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.centered img {
+  width: 20px;
+  border-radius: 20%;
+}
+.center_img {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+.para
+	{
+        color: blue;
+	      font-size: 30px;
+        font-weight: bold;	
+	}	
+  span
+	{
+    text-decoration: underline;	
+	}
+
+  .paracode
+	{
+        color: blue;
+	      font-size: 13px;	
+	}
+  </style>
+  
+</head>
+
+<div class="split left">
+<div class="centered">
+<p id="p1" class="para">SignUp</p><br><br>
 <form id="log_form" name="nice_form" method="post">
-    username:
-    <input name="user" type="text">
-    password:
-    <input name="pass" type="text">
-    email:
-    <input name="email" type="text">
-    <input id="epibebaiosi" type="submit">
-</form>
+    Username:
+    <input name="user" type="text"><br><br><br>
+    Password:
+    <input name="pass" type="password" id="myInput"><br><br>
+    <input type="checkbox" onclick="passfunc()"><span1 class="paracode">Show Password</span1><br><br>
+    Email:
+    <input  name="email" type="text" ><br><br>
 
-<a href="login.html">Login</a>
+    <input id="epibebaiosi" type="submit" class="button"><br><br>
+
+    <img  style="float: left; margin: 0px 10px 10px 0px;" src="exclamation.png" alt="exclamation">
+    <p1>If you already have an account, please visit the Login page down below.</p1><br><br>
+    <a href="login.html">Login</a>
+</form></div>
+</div>
+
+<div class="split right">
+    <img src="distance.png"  width="150" height="150" alt="search" class="center_img">
+    <div class="centered"><br><br><br><br>
+    <p style="text-align:center" class="para">This is a website for Covid-19 contact tracing</p>
+    <p style="text-align:center" class="pr"><span >Did you know:</span>Our website offers ways to declare a confirmed Covid-19 case <br>
+       in order to inform and protect other users.</p>
+      </div>
+</div>
+
 
 <script>
+
+function passfunc() {
+  var x = document.getElementById("myInput");
+  if (x.type === "password") {
+    x.type = "text";
+  } else {
+    x.type = "password";
+  }
+}
+
     var vorm = document.getElementById('log_form');
     vorm.addEventListener('submit', function (ev) {
         let vormData = new FormData(vorm);

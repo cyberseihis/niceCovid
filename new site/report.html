@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<head >
+  <title>Report</title>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <p>Δήλωση Κρούσματος</p>
+    <div>
+        <ul>
+            <li><a href="ligma.html">Map</a></li>
+            <li><a href="report.html">Δηλωση κρουσματος</a></li>
+            <li><a href="contacts.html">πιθανες επαφες</a></li>
+            <li><a href="user_settings.html">user settings</a></li>
+          </ul>
+    </div>
+
+    <p id="p1">report diagnosis</p>
+<form id="covid_form" name="nice_form" method="post">
+  <input type="date" name="diagnosed">
+    <input id="epibebaiosi" type="submit">
+</form>
+    <script>
+      var favoriteMovie = sessionStorage.getItem('favoriteMovie');
+      favoriteMovie = "62fbf38113f65684eee1746e";
+
+      var vorm = document.getElementById('covid_form');
+    vorm.addEventListener('submit', function (ev) {
+        let vormData = new FormData(vorm);
+        lmao = Object.fromEntries(vormData);
+        lmao.userid = window.favoriteMovie;
+        axios.post('http://localhost:4545/report', lmao)
+            .then(function (response) {
+                console.log(response.data);
+            })
+
+        ev.preventDefault();
+          }, false);
+
+    </script>
+        
+          
+</body>
