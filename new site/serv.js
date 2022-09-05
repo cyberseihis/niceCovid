@@ -3,6 +3,7 @@ const app=express();
 const mongo=require("mongodb");
 const bodyParser = require("body-parser");
 const cors = require('cors');
+const fileUpload = require('express-fileupload');
 const mongoClient = mongo.MongoClient;
 let db;
 let POICollection;
@@ -13,6 +14,11 @@ mongoClient.connect('mongodb+srv://panos:5555p@cluster30.et1yr.mongodb.net/test'
     
     db = client.db('example')
     POICollection = db.collection('POIs')
+
+
+    app.use(fileUpload({
+      createParentPath: true
+  }));
     
     //Εντολές που χρησιμοποιούνται για τον έλεγχο των στοιχείων που εισάγει ο χρήστης στην σελίδα του login.
     app.use("/login",cors());
@@ -80,6 +86,104 @@ mongoClient.connect('mongodb+srv://panos:5555p@cluster30.et1yr.mongodb.net/test'
       res.send("nice covid");}
 
     })
+
+    app.use("/threats",cors());
+    app.use("/threats",bodyParser.urlencoded({ extended: false }),bodyParser.json());
+    app.post("/threats",async function(req,res){
+      console.log(req.body)
+      threts = await tools.are_you_a_threat(db,mongo.ObjectId(req.body.userid));
+      res.send(await Promise.all( threts.map(e=>tools.VisitToLine(db,e))));}
+
+    )
+
+    app.use("/mystory",cors());
+    app.use("/mystory",bodyParser.urlencoded({ extended: false }),bodyParser.json());
+    app.post("/mystory",async function(req,res){
+      console.log(req.body)
+      mouser=mongo.ObjectId(req.body.userid);
+      av= await tools.all_my_visits(db,mouser);
+      avisits = await Promise.all(av.map(e=>tools.VisitToLine(db,e)));
+      asicks = await tools.all_my_sickness(db,mouser);
+      res.send({allvisits:avisits,allsick:asicks});}
+
+    )
+
+
+    app.use("/settings",cors());
+    app.use("/settings",bodyParser.urlencoded({ extended: false }),bodyParser.json());
+    app.post("/settings",async function(req,res){
+      console.log(req.body)
+      mouser=mongo.ObjectId(req.body.userid);
+      upd=await tools.edit_user(db,mouser,req.body.user,req.body.pass);
+      if(upd.modifiedCount>0)res.send("Success");else res.send("");
+    }
+
+    )
+
+    app.use("/admin",cors());
+    app.use("/admin",bodyParser.urlencoded({ extended: false }),bodyParser.json());
+    app.post("/admin",async function(req,res){
+      console.log(req.body)
+      res.send(await tools.Check_Admin(db,req.body.user,req.body.pass));
+    }
+
+    )
+
+    app.use("/basicstat",cors());
+    app.use("/basicstat",bodyParser.urlencoded({ extended: false }),bodyParser.json());
+    app.post("/basicstat",async function(req,res){
+      console.log(req.body)
+      res.send(await tools.EveryStatistic(db));
+    }
+
+    )
+
+    app.use("/macrostats",cors());
+    app.use("/macrostats",bodyParser.urlencoded({ extended: false }),bodyParser.json());
+    app.post("/macrostats",async function(req,res){
+      console.log(req.body)
+      res.send(await tools.graphdata(db,req.body.dra));
+    }
+
+    )
+
+    app.use("/microstats",cors());
+    app.use("/microstats",bodyParser.urlencoded({ extended: false }),bodyParser.json());
+    app.post("/microstats",async function(req,res){
+      console.log(req.body)
+      
+      res.send(await tools.hourtostat(db,new Date(req.body.calendar)));
+    }
+
+    )
+
+
+    app.use("/jsonPOIS",cors());
+    //app.use("/jsonPOIS",bodyParser.urlencoded({ extended: false }),bodyParser.json());
+  
+  app.post("/jsonPOIS",async function(req,res){
+    //console.log(req)
+    if(!req.files) {res.send("nofiles")}
+    else {
+      let myfile=req.files.jzon;
+      console.log(myfile)
+      myfile.mv("C:/Users/alekk/OneDrive/Desktop/project_Web/new_site/uploadedfiles/"+myfile.name,e=>
+      tools.json_file_function(db,"C:/Users/alekk/OneDrive/Desktop/project_Web/new_site/uploadedfiles/"+myfile.name)
+      );
+      res.send("olaok")
+    }
+    
+  })
+
+
+  app.use("/hiroshima",cors());
+    app.use("/hiroshima",bodyParser.urlencoded({ extended: false }),bodyParser.json());
+    app.post("/hiroshima",async function(req,res){
+      tools.delete_POIs(db);
+      res.send("its done.");
+    }
+
+    )
 
     app.listen(4545);
   })
