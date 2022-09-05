@@ -1,0 +1,161 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> 
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="http://code.highcharttable.org/2.0.0/jquery.highchartTable-min.js" type="text/javascript"></script>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+
+<form id="fileform"  encytpe="multipart/form-data">
+    <input type="file" name="jzon">
+    <input type="submit">
+</form>
+
+DANGER! THIS DELETES EVERY POI IN THE DATABASE!
+<form id="redbutton"  encytpe="multipart/form-data">
+    
+    <input type="submit" value="X">
+</form>
+
+
+Total visits:
+<p id="tv"></p>
+Total cases:
+<p id="cc"></p>
+Total crimes:
+<p id="dv"></p>
+<div id="visTable"></div>
+<div id="dangerTable"></div>
+
+<form id="dateradio">
+    <input id="monradio" type="radio" name="dra" value="month">
+    <label for="monradio">Month</label><br>
+    <input id="weekradio" type="radio" name="dra" value="week">
+    <label for="weekradio">Week</label><br>
+    <input type="submit" value="submit">
+</form>
+<div id="timeTable"></div>
+<form id="hour_form" name="nice_form" method="post">
+    <input type="date" name="calendar">
+    <input id="epibebaiosi" type="submit">
+  </form>
+  <div id="hourTable"></div>
+<script>
+    typeheads=["POI type","Visits"];
+    grapheads=["Date","Visits","Covid Visits"];
+    hourheads=["Hour","Visits","Covid Visits"];
+
+axios.post('http://localhost:4545/basicstat',{})
+        .then(function (response) {
+            stats=response.data;
+            document.getElementById("tv").innerHTML=stats.a;
+            document.getElementById("cc").innerHTML=stats.b;
+            document.getElementById("dv").innerHTML=stats.c;
+            document.getElementById("visTable").appendChild(maketable(stats.d,typeheads));
+            document.getElementById("dangerTable").appendChild(maketable(stats.e,typeheads));
+        })
+
+        var vorm = document.getElementById('dateradio');
+        vorm.addEventListener('submit', function (ev) {
+            document.getElementById("timeTable").innerHTML = "";
+            let vormData = new FormData(vorm);
+            lmao = Object.fromEntries(vormData);
+            console.log(lmao);
+            axios.post('http://localhost:4545/macrostats', lmao)
+                .then(function (response) {
+                    mtab=maketable(response.data,grapheads);
+                    mtab.id="timett";
+                    mtab.setAttribute("data-graph-container-before","1");
+                    mtab.setAttribute("data-graph-type","column");
+                    document.getElementById("timeTable").appendChild(mtab);
+                    $('#timett').highchartTable();
+
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+    
+            ev.preventDefault();
+        }, false);
+
+        var verm = document.getElementById('hour_form');
+        verm.addEventListener('submit', function (ev) {
+            document.getElementById("hourTable").innerHTML = "";
+            let vormData = new FormData(verm);
+            lmao = Object.fromEntries(vormData);
+            console.log(lmao);
+            axios.post('http://localhost:4545/microstats', lmao)
+                .then(function (response) {
+                    mtab=maketable(response.data,hourheads);
+                    mtab.id="houtt";
+                    mtab.setAttribute("data-graph-container-before","1");
+                    mtab.setAttribute("data-graph-type","column");
+                    document.getElementById("hourTable").appendChild(mtab);
+                    $('#houtt').highchartTable();
+
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+    
+            ev.preventDefault();
+        }, false);
+
+    
+    function maketable(sortedtypes,headers){
+    let table = document.createElement('table');
+    let thead = document.createElement('thead');
+    let tbody = document.createElement('tbody');
+    let headerRow = document.createElement('tr');
+    headers.forEach(headerText => {
+        let header = document.createElement('th');
+        let textNode = document.createTextNode(headerText);
+        header.appendChild(textNode);
+        headerRow.appendChild(header);
+    });
+    thead.appendChild(headerRow);
+    sortedtypes.forEach(st => {
+        let row = document.createElement('tr');
+        Object.values(st).forEach(text => {
+            let cell = document.createElement('td');
+            let textNode = document.createTextNode(text);
+            cell.appendChild(textNode);
+            row.appendChild(cell);
+        })
+        tbody.appendChild(row);
+    });
+    table.appendChild(thead);
+    table.appendChild(tbody);
+    return table;
+}
+
+var ffrm = document.getElementById('fileform');
+        ffrm.addEventListener('submit', function (ev) {
+            
+            let vormData = new FormData(ffrm);
+            lmao = Object.fromEntries(vormData);
+            console.log(lmao);
+            axios.post('http://localhost:4545/jsonPOIS', lmao, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        }})
+                .then(function (response) {
+                    console.log(response.data);
+
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+    
+            ev.preventDefault();
+        }, false);
+
+        var derm = document.getElementById('redbutton');
+        derm.addEventListener('submit', function (ev) {
+            
+            axios.post('http://localhost:4545/hiroshima');
+                
+    
+            ev.preventDefault();
+        }, false);
+
+</script>

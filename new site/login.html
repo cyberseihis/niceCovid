@@ -7,17 +7,17 @@
     
     body {background-color: #E0E0E0; font-family: 'Asap';}
     .button {
-  background-color: #008CBA;
+  background-color: rgb(87, 87, 230);
   border: none;
   color: white;
-  padding: 15px 32px;
+  padding: 10px 22px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
   margin: 2px 2px;
   cursor: pointer;
-  border-radius: 12px;
+  border-radius: 25px;
    }
 
     .split {
@@ -60,13 +60,13 @@
 }
 .para
 	{
-        color: blue;
+        color: rgb(87, 87, 230);
 	    font-size: 30px;
         font-weight: bold;	
 	}	
   .paracode
 	{
-        color: blue;
+        color: rgb(87, 87, 230);
 	      font-size: 13px;	
 	}
 
@@ -80,21 +80,25 @@
       <p style="text-align:center" class="para">Login to your account now</p>
       <p style="text-align:center" >Enjoy the capabilities of our website by tracing your contacts,<br>
          searching for POIs near you location,declaring visits and many more.</p>
-        </div>
+        </div><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><hr style = "position:absolute;left:61%;width: 320px;">
+        <p style="position:absolute;left:65%;font-size: 14.5px;">Covid Traces - Our Covid tracing Website</p>
+      </div>
+    
 </div>
 
 
 <div class="split left">
 <div class="centered">
-<p id="p1" class="para">Login</p><br><br>
+<p id="p1" class="para"  style = "font-family: 'Asap'">Login</p><br><br>
 <form id="log_form" name="nice_form" method="post">
     Username:
     <input name="user" type="text"><br><br><br>
     Password:
-    <input name="pass" type="password" id="myInput"><br><br><br>
+    <input name="pass" type="password" id="myInput"><br>
+    <p id="p2" style = "font-family: 'Asap';font-size: 10px;"></p>
     <input type="checkbox" onclick="passfunc()"><span1 class="paracode">Show Password</span1><br><br>
 
-    <input id="epibebaiosi" type="submit" class="button"><br><br>
+    <input id="epibebaiosi" type="submit" class="button" value="Submit"><br><br>
 
     <img  style="float: left; margin: 0px 10px 10px 0px;" src="exclamation.png" alt="exclamation">
     <p1>If you do not have an account already,please visit the Sign Up page down below.</p1><br><br>
@@ -122,7 +126,7 @@ function passfunc() {
             .then(function (response) {
                 console.log(response.data);
                 if(response.data==""){
-                document.getElementById("p1").innerHTML = "Wrong credentials";
+                document.getElementById("p2").innerHTML = "Wrong credentials were inserted!";
                 } else{
                     sessionStorage.setItem("favoriteMovie", JSON.stringify( response.data));
                     window.location.replace("ligma.html");

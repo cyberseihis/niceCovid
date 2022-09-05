@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <head >
-  <title>SignUp</title>
+  <title>Admin Login</title>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <link href='https://fonts.googleapis.com/css?family=Asap' rel='stylesheet'>
   <style>
     
-  body {background-color: #E0E0E0; font-family: 'Asap';}
+    body {background-color: #E0E0E0; font-family: 'Asap';}
     .button {
   background-color: rgb(87, 87, 230);
   border: none;
@@ -53,7 +53,7 @@
 }
 .center_img {
   position: absolute;
-  top: 20%;
+  top: 30%;
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
@@ -61,54 +61,47 @@
 .para
 	{
         color: rgb(87, 87, 230);
-	      font-size: 30px;
+	    font-size: 30px;
         font-weight: bold;	
 	}	
-  span
-	{
-    text-decoration: underline;	
-	}
-
   .paracode
 	{
         color: rgb(87, 87, 230);
 	      font-size: 13px;	
 	}
+
   </style>
   
 </head>
 
+<div class="split right">
+      <img src="search.png"  width="150" height="150" alt="search" class="center_img">
+      <div class="centered"><br><br><br><br>
+      <!--<p style="text-align:center" class="para">You must be an Admin in order to use your credentials</p>-->
+      <p style="text-align:center;font-size: 23px;color: rgb(87, 87, 230)" >You must be an Admin in order to perform an Admin Login!</p>
+      </div><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><hr style = "position:absolute;left:61%;width: 320px;">
+      <p style="position:absolute;left:65%;font-size: 14.5px;">Covid Traces - Our Covid tracing Website</p>
+      </div>
+</div>
+
+
 <div class="split left">
 <div class="centered">
-<p id="p1" class="para">SignUp</p><br><br>
+<p  class="para">Admin Login</p><br><br>
+<p id="p1"></p>
 <form id="log_form" name="nice_form" method="post">
-    Username:
+    AdminUsername:
     <input name="user" type="text"><br><br><br>
-    Password:
-    <input name="pass" type="password" id="myInput"><br><br>
+    AdminPassword:
+    <input name="pass" type="password" id="myInput"><br><br><br>
     <input type="checkbox" onclick="passfunc()"><span1 class="paracode">Show Password</span1><br><br>
-    Email:
-    <input  name="email" type="text" ><br>
-    <p id="p2" style = "font-family: 'Asap';font-size: 10px;"></p>
 
     <input id="epibebaiosi" type="submit" class="button" value="Submit"><br><br>
 
-    <img  style="float: left; margin: 0px 10px 10px 0px;" src="exclamation.png" alt="exclamation">
-    <p1>If you already have an account, please visit the Login page down below.</p1><br><br>
-    <a href="login.html">Login</a>
+
+    
 </form></div>
 </div>
-
-<div class="split right">
-    <img src="distance.png"  width="150" height="150" alt="search" class="center_img">
-    <div class="centered"><br><br><br><br>
-    <p style="text-align:center" class="para">This is a website for Covid-19 contact tracing</p>
-    <p style="text-align:center" class="pr"><span >Did you know: </span>Our website offers ways to declare a confirmed Covid-19 case <br>
-       in order to inform and protect other users.</p>
-      </div><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><hr style = "position:absolute;left:61%;width: 320px">
-      <p style="position:absolute;left:65%">Covid Traces - Our Covid tracing Website</p>
-    </div>
-
 
 <script>
 
@@ -125,14 +118,14 @@ function passfunc() {
     vorm.addEventListener('submit', function (ev) {
         let vormData = new FormData(vorm);
         lmao = Object.fromEntries(vormData);
-        axios.post('http://localhost:4545/sign', lmao)
+        axios.post('http://localhost:4545/admin', lmao)
             .then(function (response) {
                 console.log(response.data);
-                if(response.data=="error_dup"){
-                document.getElementById("p2").innerHTML = "There was an error!";
+                if(response.data==""){
+                document.getElementById("p1").innerHTML = "Wrong credentials";
                 } else{
-                    document.getElementById("p2").innerHTML = "Account created!";
-
+                    
+                    window.location.replace("manager.html");
                 }
             })
             .catch(function (error) {

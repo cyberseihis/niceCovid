@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
     integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
     crossorigin=""/>
-    <link href='https://fonts.googleapis.com/css?family=Arial' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Asap' rel='stylesheet'>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
    crossorigin=""></script>
@@ -21,6 +21,7 @@
     padding: 0;
     overflow: hidden;
     background-color: #333;
+    border-radius: 25px;
 }
 li a {
   color: white;
@@ -38,7 +39,7 @@ li {
   border-right: 1px solid #bbb;
 }
 
-  body {background-color: #ffffff; font-family: 'Arial'}
+  body {background-color: #ffffff; font-family: 'Asap'}
   /*hr { display: block;  overflow: hidden; border-style: inset; border-width: 1px;}
   hr {width: 60%;margin-left: auto;margin-right: auto;}*/
   .para
@@ -48,14 +49,18 @@ li {
         font-weight: bold;	
 	}
 div.outset {border-style: outset;}
+box {
+  width: 210px;
+  border: 4px rgba(255, 255, 255,0.8);
+  padding: 23px;
+  margin: 10px;
+  background-color: rgba(255, 255, 255,0.8);
+  border-radius: 25px;
+}
  </style>
 </head>
 <body>
-    <p style="text-align: center;" class="para" >
-        Website for Covid tracing
-    </p>
-    <p id="sss">username_placehold</p>
-    <div style="text-align:center" >
+    <div style="position :absolute;top:5%;left:35%;z-index:2174;display:block;" >
         <ul>
             <li><a href="ligma.html" class="active">Home</a></li>
             <li><a href="report.html"> Covid Case Report</a></li>
@@ -65,28 +70,48 @@ div.outset {border-style: outset;}
           </ul>
     </div>
     
-<p id="p2">Search for POIs</p>
-<form id="srch_form" name="nice_form" method="post">
-    <input name="poitype" type="text">
-    <input id="epibebaiosi" type="submit">
+
+<div>
+    <box style="position :absolute;top:2%;left:5%;z-index:2174;display:block">
+<p id="p2" style="position :absolute;top:-31%;left:5%;z-index:2174;display:block;font-size: 14px;">Search for types of POIs to visit:</p>
+<form id="srch_form" name="nice_form" method="post" style="position :absolute;top:40%;left:5%;z-index:2174;display:block">
+    <select name="poitype" style="border-radius: 25px">
+        <option value="cafe">cafe</option><option value="food">food</option><option value="point_of_interest">point_of_interest</option>
+        <option value="establishment">establishment</option><option value="restaurant">restaurant</option><option value="convenience_store">convenience_store</option>
+        <option value="grocery_or_supermarket">grocery_or_supermarket</option><option value="store">store</option><option value="bakery">bakery</option>
+        <option value="supermarket">supermarket</option><option value="car_repair">car_repair</option><option value="park">park</option>
+        <option value="tourist_attraction">tourist_attraction</option><option value="gym">gym</option><option value="health">health</option>
+        <option value="car_wash">car_wash</option><option value="shopping_mall">shopping_mall</option><option value="furniture_store">furniture_store</option>
+        <option value="home_goods_store">home_goods_store</option><option value="liquor_store">liquor_store</option><option value="lodging">lodging</option>
+        <option value="laundry">laundry</option><option value="hardware_store">hardware_store</option><option value="electronics_store">electronics_store</option>
+        <option value="hair_care">hair_care</option><option value="drugs_store">drugs_store</option><option value="bank">bank</option>
+        <option value="atm">atm</option><option value="finance">finance</option><option value="doctor">doctor</option>
+        <option value="casino">casino</option><option value="car_dealer">car_dealer</option><option value="pet_store">pet_store</option>
+        <option value="bar">bar</option><option value="town_square">town_square</option><option value="accounting">accounting</option>
+        <option value="pharmacy">pharmacy</option>
+    </select>
+    <input id="epibebaiosi" type="submit" value="Submit" style="border-radius: 25px;background-color: rgb(87, 87, 230);color: #ffffff;">
 </form>
-    <div id="map" style="height: 350px;">
-     
+</box>
+<p id="p2" style="position :absolute;top:9%;left:12%;z-index:2174;display:block;font-size: 10px;color: rgb(44, 44, 68);">CovidTraces</p>
+    <div id="map" style="height : 100%; width : 100%; top : 0; left : 0; position : absolute; z-index : 1;">
     </div>
-    <div id = "popup">
+    <div id = "popup" style = "z-index: 2184;position: absolute;top: 25%;left: 25%;background-color: coral;display: none;">
         <p id="poiname"></p>
         population next 2 hours:
         <p id="poptimes"></p>
         visits last 2 hours:
         <p id="nvisits"></p>
-        <div id="twentym">
+        <div id="twentym" style="display: none;">
             Register visit
             <form id="visit_form" name="nice_form" method="post">
                 <input name="popnum" type="number">
                 <input id="epibebaiosi" type="submit">
             </form>
         </div>
+        <button onclick="hidepopup()">X</button>
     </div>
+</div>
     <script src= "coordinates.js"></script>
     <script>
 
@@ -104,7 +129,7 @@ div.outset {border-style: outset;}
         }
         
 
-        var marks = [];
+        window.marks = [];
         var favoriteMovie = sessionStorage.getItem('favoriteMovie');
         document.getElementById("sss").innerHTML = favoriteMovie;
         /*axios.post('http://localhost:4545/poi', {})
@@ -164,8 +189,11 @@ function deg2rad(deg) {
             hour = j.getHours();
             pop2=poy.populartimes[day].data[hour];
             document.getElementById("poptimes").innerHTML = pop + "," + pop2;
-
+            
+            document.getElementById("twentym").style="display:none";
+            document.getElementById("popup").style="z-index: 2184;position: absolute;top: 25%;left: 25%;background-color: coral;display: block;";
             nVI(poy._id);
+            
 
             navigator.geolocation.getCurrentPosition(gp=>{
                 
@@ -178,25 +206,34 @@ function deg2rad(deg) {
             })
         }
 
+        function hidepopup(){
+            document.getElementById("popup").style="z-index: 2184;position: absolute;top: 25%;left: 25%;background-color: coral;display: none;";
+
+        }
+
         var vorm = document.getElementById('srch_form');
         vorm.addEventListener('submit', function (ev) {
             let vormData = new FormData(vorm);
             lmao = Object.fromEntries(vormData);
+           
             axios.post('http://localhost:4545/searchpoi', lmao)
                 .then(function (response) {
+                    for(pm of window.marks){
+                        pm.remove();
+                    }
+                    window.marks=[];
                     for(pooi of response.data){
                 cords = [pooi.coordinates.lat,pooi.coordinates.lng]
                 let h = L.marker (cords, {icon: poi2icon(pooi)}).addTo(map);
                 h.alt = pooi;
                 h.on('click', e=>{console.log(e.target.alt); popupmanager(e)});
-                marks.push(h)
+                window.marks.push(h)
                     }
                     
                 })
                 .catch(function (error) {
                     console.log(error);
                 })
-    
             ev.preventDefault();
         }, false);
     

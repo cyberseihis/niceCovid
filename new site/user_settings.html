@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<head >
+  <title>User Settings</title>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <link href='https://fonts.googleapis.com/css?family=Asap' rel='stylesheet'>
+  <style>
+       li {
+    display: inline;
+    margin: 0px;
+  }
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+    border-radius:  0px 0px 12px 12px;
+}
+li a {
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+li a:hover {
+  background-color: rgb(128, 159, 205);
+}
+.active {
+  background-color: rgb(87, 87, 230);
+}
+
+  body {background-color: #ffffff; font-family: 'Asap'}
+  /*hr { display: block;  overflow: hidden; border-style: inset; border-width: 1px;}*/
+  hr {width: 75%;margin-left: auto;margin-right: auto;}
+  .para
+	{
+        color: rgb(44, 44, 68);
+	      font-size: 30px;
+        font-weight: bold;
+        max-height: 1500px;	
+        background-color: rgb(112, 250, 204);
+        margin: 0 auto; 
+        border-radius:   12px 12px 0px 0px;
+	}
+div.outset {border-style: outset;}
+div.fixed {
+  position: fixed;
+  width: 100%;
+  bottom: 10px;
+}
+</style>
+</head>
+<body>
+  <p style="text-align: center;" class="para">User Settings</p>
+    <div style="text-align:center">
+        <ul>
+            <li><a href="ligma.html">Home</a></li>
+            <li><a href="report.html">Covid Case Report</a></li>
+            <li><a href="contacts.html">Possible Contacts</a></li>
+            <li><a href="user_settings.html" class = "active">User Settings</a></li>
+          </ul>
+    </div><br>
+    <form id="log_form" name="nice_form" method="post">
+      Username:
+      <input name="user" type="text"><br><br><br>
+      Password:
+      <input name="pass" type="password" id="myInput"><br><br><br>
+      <input type="checkbox" onclick="passfunc()"><span1 class="paracode">Show Password</span1><br><br>
+  
+      <input id="epibebaiosi" type="submit" class="button" value="Submit"><br><br>
+  
+     
+     
+      
+  </form>
+  <p id="p1"></p>
+
+    oi episkepseis mou
+
+    <ol id="mystory"></ol>
+    <br>
+    oi dhlwseis mou
+    <ol id="mydeath"></ol>
+
+    <div class="fixed">
+      <hr>
+    <p id="p2" style="position:relative; left:1050px; font-size: 15px;">CovidTraces - Your Covid tracing website</p>
+    </div>   
+    
+    <script>
+      var favoriteMovie = sessionStorage.getItem('favoriteMovie');
+      favoriteMovie = "62fbf36813f65684eee1746c";
+      var list_visit = document.getElementById('mystory');
+      var list_19 = document.getElementById('mydeath');
+
+  
+  
+      axios.post('http://localhost:4545/mystory', { userid: favoriteMovie })
+        .then(function (response) {
+          console.log(response.data);
+          for (threat of response.data.allvisits) {
+            entry = document.createElement('li');
+            loc=threat.location;
+            tim=threat.time;
+            entry.appendChild(document.createTextNode("Location: "+loc+", Time of visit: "+tim));
+            list_visit.appendChild(entry);
+          }
+          for (threat of response.data.allsick) {
+            entry = document.createElement('li');
+            
+            tim=threat.Date;
+            entry.appendChild(document.createTextNode("Time of diagnosis: "+tim));
+            list_19.appendChild(entry);
+          }
+        })
+  
+  
+  
+    </script>
+    <script>
+    function passfunc() {
+      var x = document.getElementById("myInput");
+      if (x.type === "password") {
+        x.type = "text";
+      } else {
+        x.type = "password";
+      }
+    }
+    
+        var vorm = document.getElementById('log_form');
+        vorm.addEventListener('submit', function (ev) {
+            let vormData = new FormData(vorm);
+            lmao = Object.fromEntries(vormData);
+            lmao.userid = favoriteMovie;
+            axios.post('http://localhost:4545/settings', lmao)
+                .then(function (response) {
+                    console.log(response.data);
+                    if(response.data==""){
+                    document.getElementById("p1").innerHTML = "Failed to update user data";
+                    } else{
+                      document.getElementById("p1").innerHTML = "User data updated.";
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+    
+            ev.preventDefault();
+        }, false);
+    
+    </script>
+          
+</body>
