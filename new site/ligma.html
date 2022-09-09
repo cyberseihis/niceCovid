@@ -57,6 +57,38 @@ box {
   background-color: rgba(255, 255, 255,0.8);
   border-radius: 25px;
 }
+button{
+    position: absolute;
+    color: black;
+    top: 0px;
+    right: 0px;
+    border-radius: 0px 10px 0px 0px;
+    border:none;
+    width: 25px;
+    height: 20px;
+    transition: all .5s ease;
+    background-color : transparent;
+    
+}
+button:hover {
+    display: block;
+    z-index:2174;
+    background-color: rgb(182, 29, 29);
+}
+#popupheader {
+  padding: 10px;
+  cursor: move;
+  z-index: 2174;
+  background-color: rgb(87, 87, 230);
+  color: #fff;
+  border-radius: 10px 10px 0px 0px;
+}
+.leaflet-container {
+    background-image:url("https://www.ertnews.gr/wp-content/uploads/2022/02/banner-covid-19-1280x549-1.jpg") !important;
+    background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: cover; /* Resize the background image to cover the entire container */
+}
  </style>
 </head>
 <body>
@@ -66,7 +98,6 @@ box {
             <li><a href="report.html"> Covid Case Report</a></li>
             <li><a href="contacts.html">Possible Contacts</a></li>
             <li><a href="user_settings.html">User Settings</a></li>
-            <!--<li><a href="about.html">About us</a></li> Να βγαινει ενα popup που θα δινει καποιες πληροφοριες για την ιστοσελιδα μας-->
           </ul>
     </div>
     
@@ -93,23 +124,24 @@ box {
     <input id="epibebaiosi" type="submit" value="Submit" style="border-radius: 25px;background-color: rgb(87, 87, 230);color: #ffffff;">
 </form>
 </box>
-<p id="p2" style="position :absolute;top:9%;left:12%;z-index:2174;display:block;font-size: 10px;color: rgb(44, 44, 68);">CovidTraces</p>
+<span style="position :absolute;bottom: 0;left: 0;font-size: 17px;color: rgb(44, 44, 68);z-index:2174;display:block;">CovidTraces</span>
     <div id="map" style="height : 100%; width : 100%; top : 0; left : 0; position : absolute; z-index : 1;">
     </div>
-    <div id = "popup" style = "z-index: 2184;position: absolute;top: 25%;left: 25%;background-color: coral;display: none;">
-        <p id="poiname"></p>
-        population next 2 hours:
-        <p id="poptimes"></p>
-        visits last 2 hours:
-        <p id="nvisits"></p>
+    <div id = "popup" style = "z-index: 2184;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%); background-color: rgba(255, 255, 255,0.8);border-radius: 10px;width:360px;display:none;">
+        <div id="popupheader"></div>
+        <p id="poiname" style="text-align:center;font-weight: bold;"></p>
+        <p style="text-align:center;font-size : 15px">Population  for the next 2 hours:</p>
+        <p id="poptimes" style="text-align:center;font-size : 12px"></p>
+        <p style="text-align:center;font-size : 15px"> Number of Visits  for the last 2 hours:</p>
+        <p id="nvisits" style="text-align:center;font-size : 12px"></p>
         <div id="twentym" style="display: none;">
-            Register visit
-            <form id="visit_form" name="nice_form" method="post">
-                <input name="popnum" type="number">
-                <input id="epibebaiosi" type="submit">
+        <p style="text-align:center;font-size : 15px">Register visit:</p>
+            <form id="visit_form" name="nice_form" method="post" style="text-align:center">
+                <input name="popnum" type="number" style="border-radius: 25px;">
+                <input id="epibebaiosi" type="submit" value="Submit" style="border-radius: 25px;background-color: rgb(87, 87, 230);color: #ffffff;">
             </form>
         </div>
-        <button onclick="hidepopup()">X</button>
+        <button onclick="hidepopup()" class="xbutton">x</button>
     </div>
 </div>
     <script src= "coordinates.js"></script>
@@ -130,8 +162,8 @@ box {
         
 
         window.marks = [];
-        var favoriteMovie = sessionStorage.getItem('favoriteMovie');
-        document.getElementById("sss").innerHTML = favoriteMovie;
+        window.favoriteMovie = sessionStorage.getItem('favoriteMovie');
+        document.getElementById("sss").innerHTML = window.favoriteMovie;
         /*axios.post('http://localhost:4545/poi', {})
             .then(function (response) {
                 for(pooi of response.data){
@@ -188,10 +220,10 @@ function deg2rad(deg) {
             day = (7+ j.getDay() -1)%7;
             hour = j.getHours();
             pop2=poy.populartimes[day].data[hour];
-            document.getElementById("poptimes").innerHTML = pop + "," + pop2;
+            document.getElementById("poptimes").innerHTML = "Now: " + pop + " , " + "Next hour: " + pop2;
             
             document.getElementById("twentym").style="display:none";
-            document.getElementById("popup").style="z-index: 2184;position: absolute;top: 25%;left: 25%;background-color: coral;display: block;";
+            document.getElementById("popup").style="z-index: 2184;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%); background-color: rgba(255, 255, 255,0.8);display: block;border-radius: 10px;width:360px";
             nVI(poy._id);
             
 
@@ -207,7 +239,7 @@ function deg2rad(deg) {
         }
 
         function hidepopup(){
-            document.getElementById("popup").style="z-index: 2184;position: absolute;top: 25%;left: 25%;background-color: coral;display: none;";
+            document.getElementById("popup").style="z-index: 2184;position: absolute;top: 25%;left: 25%;background-color: rgba(255, 255, 255,0.8);display: none;border-radious";
 
         }
 
@@ -242,7 +274,7 @@ function deg2rad(deg) {
             let vormData = new FormData(varm);
             lmao = Object.fromEntries(vormData);
             lmao.poivisti = window.globalpoi;
-            lmao.userid="62fbe306f51865ef0a0f527c"
+            lmao.userid=window.favoriteMovie;
             axios.post('http://localhost:4545/visitor', lmao)
                 .then(function (response) {
                     console.log(response.data)
@@ -254,5 +286,48 @@ function deg2rad(deg) {
     
             ev.preventDefault();
         }, false);
+
     </script>
+    <script>
+        //Make the popup draggagle:
+        dragElement(document.getElementById("popup"));
+        
+        function dragElement(elmnt) {
+          var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+          if (document.getElementById(elmnt.id + "header")) {
+            /* if present, the header is where you move the popup from:*/
+            document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+          } else {
+            /* otherwise, move the DIV from anywhere inside the popup:*/
+            elmnt.onmousedown = dragMouseDown;
+          }
+        
+          function dragMouseDown(e) {
+            e = e || window.event;
+            e.preventDefault();
+            // get the mouse cursor position at startup:
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            document.onmouseup = closeDragElement;
+            // call a function whenever the cursor moves:
+            document.onmousemove = elementDrag;
+          }
+        
+          function elementDrag(e) {
+            e = e || window.event;
+            e.preventDefault();
+            pos1 = pos3 - e.clientX;
+            pos2 = pos4 - e.clientY;
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+            elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+          }
+        
+          function closeDragElement() {
+            document.onmouseup = null;
+            document.onmousemove = null;
+          }
+        }
+        </script>
 </body>

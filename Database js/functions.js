@@ -263,9 +263,13 @@ function change_POIs(db, jsonPOI) {
 function json_file_function(db, path) {
     const fs = require('fs');
     var data = JSON.parse(fs.readFileSync(path));
+    bulk = db.collection("POIs").initializeUnorderedBulkOp();
     for (let i = 0; i < data.length; i++) {
-        change_POIs(db, data[i]);
+        
+        bulk.find( { id: data[i].id } ).upsert().update( { "$set": data[i] } );
     }
+   
+    bulk.execute();
 }
 
 function delete_POIs(db) {
