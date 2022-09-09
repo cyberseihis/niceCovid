@@ -332,7 +332,7 @@ async function dangerous_visits(db) {
         { $match: { $and: [{ $expr: { $gt: ["$timestamp", "$weeksick"] } }, { $expr: { $lt: ["$timestamp", "$doublesick"] } }] } },
         { $count: 'total_covid_visits' }
     ]).toArray();
-    return j[0].total_covid_visits;
+    return j[0]?.total_covid_visits;
 }
 
 async function sortPOI_types(db) {
