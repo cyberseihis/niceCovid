@@ -278,6 +278,11 @@ function delete_POIs(db) {
             if (err) throw err;
             console.log("All POIs removed");
         })
+        db.collection("Visit").remove(
+            {}, function (err, res) {
+                if (err) throw err;
+                console.log("All Visits removed");
+            })
 }
 
 async function total_count_visits(db) {
@@ -351,6 +356,7 @@ async function sortPOI_types(db) {
         { $group: { _id: '$ffr', totaldocs: { $sum: 1 } } },
         { $sort: { 'totaldocs': -1 } }
     ]).toArray();
+
     return j;
 }
 
