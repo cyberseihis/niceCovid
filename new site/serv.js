@@ -7,7 +7,7 @@ const fileUpload = require('express-fileupload');
 const mongoClient = mongo.MongoClient;
 let db;
 let POICollection;
-var tools = require('C:/Users/alekk/OneDrive/Desktop/js/functions.js');
+var tools = require('../Database js/functions.js');
 
 mongoClient.connect('mongodb+srv://panos:5555p@cluster30.et1yr.mongodb.net/test')
   .then(client => {
