@@ -1,63 +1,173 @@
 <!DOCTYPE html>
-<head >
-<title>Manager Screen</title><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> 
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="http://code.highcharttable.org/2.0.0/jquery.highchartTable-min.js" type="text/javascript"></script>
 
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<style>
-    
-</style>
+<head>
+    <title>Admin Screen</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="http://code.highcharttable.org/2.0.0/jquery.highchartTable-min.js" type="text/javascript"></script>
+    <link href='https://fonts.googleapis.com/css?family=Asap' rel='stylesheet'>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <style>
+        body {
+            background-color: #E0E0E0;
+            font-family: 'Asap';
+        }
+
+        li.menud {
+            display: inline;
+            margin: 0px;
+        }
+
+        .para2 {
+            color: rgb(87, 87, 230);
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .paracode {
+            color: rgb(87, 87, 230);
+            font-size: 13px;
+        }
+
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+            border-radius: 0px 0px 12px 12px;
+        }
+
+        li a {
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        li a:hover {
+            background-color: rgb(87, 87, 230);
+        }
+
+        .active {
+            background-color: rgb(87, 87, 230);
+        }
+
+        body {
+            background-color: #ffffff;
+            font-family: 'Asap'
+        }
+
+        hr {
+            width: 75%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .para {
+            color: rgb(255, 255, 255);
+            font-size: 30px;
+            font-weight: bold;
+            max-height: 1500px;
+            background-color: rgb(87, 87, 230);
+            margin: 0 auto;
+            border-radius: 12px 12px 0px 0px;
+        }
+
+        div.outset {
+            border-style: outset;
+        }
+
+        div.fixed {
+            position: fixed;
+            width: 100%;
+            bottom: 10px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid;
+            text-align: center;
+        }
+
+        table {
+            margin: auto;
+            width: 50%;
+            max-width: 50%;
+            min-width: fit-content;
+            border-collapse: collapse;
+        }
+        th {
+  background-color: rgb(87, 87, 230);
+  color: white;
+}
+    tr:hover{
+        background-color: aquamarine;
+    }
+    </style>
 </head>
 
-<form id="fileform"  encytpe="multipart/form-data">
-    <input type="file" name="jzon">
-    <input type="submit">
-</form>
-
-DANGER! THIS DELETES EVERY POI IN THE DATABASE!
-<form id="redbutton"  encytpe="multipart/form-data">
+<body>
+    <p style="text-align: center;" class="para">Admin Settings</p>
     
-    <input type="submit" value="X">
-</form>
 
 
-Total visits:
-<p id="tv"></p>
-Total cases:
-<p id="cc"></p>
-Total crimes:
-<p id="dv"></p>
-<div id="visTable"></div>
-<div id="dangerTable"></div>
+    <form id="fileform" encytpe="multipart/form-data" style="text-align:center">
+        <label style="float: right;left: 67%;position: absolute;">(This is used to upload files!)</label>
+        <input type="file" name="jzon" >
+        <input type="submit" value="Submit" style="border-radius: 25px;background-color: rgb(87, 87, 230);color: #ffffff;">
+    </form><br><br>
 
-<form id="dateradio">
-    <input id="monradio" type="radio" name="dra" value="month">
-    <label for="monradio">Month</label><br>
-    <input id="weekradio" type="radio" name="dra" value="week">
-    <label for="weekradio">Week</label><br>
-    <input type="submit" value="submit">
-</form>
-<div id="timeTable"></div>
-<form id="hour_form" name="nice_form" method="post">
-    <input type="date" name="calendar">
-    <input id="epibebaiosi" type="submit">
-  </form>
-  <div id="hourTable"></div>
-<script>
-    typeheads=["POI type","Visits"];
-    grapheads=["Date","Visits","Covid Visits"];
-    hourheads=["Hour","Visits","Covid Visits"];
+    <p style="text-align:center">DANGER! THIS DELETES EVERY POI IN THE DATABASE!</p>
+    <form id="redbutton" encytpe="multipart/form-data" style="text-align:center">
+        <input type="submit" value="X" style="float: right;left: 67%;position: absolute;">
+    </form>
 
-axios.post('http://localhost:4545/basicstat',{})
-        .then(function (response) {
-            stats=response.data;
-            document.getElementById("tv").innerHTML=stats.a;
-            document.getElementById("cc").innerHTML=stats.b;
-            document.getElementById("dv").innerHTML=stats.c;
-            document.getElementById("visTable").appendChild(maketable(stats.d,typeheads));
-            document.getElementById("dangerTable").appendChild(maketable(stats.e,typeheads));
-        })
+    <p style="text-align:center">Total visits:</p>
+    <p id="tv" style="text-align:center"></p>
+    <p style="text-align:center">Total cases:</p>
+    <p id="cc" style="text-align:center"></p>
+    <p style="text-align:center">Total dangerous visits:</p>
+    <p id="dv" style="text-align:center"></p>
+
+
+
+    <div id="visTable"></div><br>
+    <div id="dangerTable"></div>
+
+    <form id="dateradio">
+        <input id="monradio" type="radio" name="dra" value="month">
+        <label for="monradio">Month</label>
+        <input id="weekradio" type="radio" name="dra" value="week">
+        <label for="weekradio">Week</label>
+        <input type="submit" value="submit">
+    </form>
+
+    <div id="timeTable"></div>
+    <!---hour form-->
+    <form id="hour_form" name="nice_form" method="post">
+        <input type="date" name="calendar">
+        <input id="epibebaiosi" type="submit">
+    </form>
+    <div id="hourTable"></div>
+
+
+
+    <script>
+        typeheads = ["Types of POIs", "Visits"];
+        grapheads = ["Date", "Visits", "Covid Visits"];
+        hourheads = ["Hour", "Visits", "Covid Visits"];
+
+        axios.post('http://localhost:4545/basicstat', {})
+            .then(function (response) {
+                stats = response.data;
+                document.getElementById("tv").innerHTML = stats.a;
+                document.getElementById("cc").innerHTML = stats.b;
+                document.getElementById("dv").innerHTML = stats.c;
+                document.getElementById("visTable").appendChild(maketable(stats.d, typeheads));
+                document.getElementById("dangerTable").appendChild(maketable(stats.e, typeheads));
+            })
 
         var vorm = document.getElementById('dateradio');
         vorm.addEventListener('submit', function (ev) {
@@ -67,10 +177,10 @@ axios.post('http://localhost:4545/basicstat',{})
             console.log(lmao);
             axios.post('http://localhost:4545/macrostats', lmao)
                 .then(function (response) {
-                    mtab=maketable(response.data,grapheads);
-                    mtab.id="timett";
-                    mtab.setAttribute("data-graph-container-before","1");
-                    mtab.setAttribute("data-graph-type","column");
+                    mtab = maketable(response.data, grapheads);
+                    mtab.id = "timett";
+                    mtab.setAttribute("data-graph-container-before", "1");
+                    mtab.setAttribute("data-graph-type", "column");
                     document.getElementById("timeTable").appendChild(mtab);
                     $('#timett').highchartTable();
 
@@ -78,7 +188,7 @@ axios.post('http://localhost:4545/basicstat',{})
                 .catch(function (error) {
                     console.log(error);
                 });
-    
+
             ev.preventDefault();
         }, false);
 
@@ -90,10 +200,10 @@ axios.post('http://localhost:4545/basicstat',{})
             console.log(lmao);
             axios.post('http://localhost:4545/microstats', lmao)
                 .then(function (response) {
-                    mtab=maketable(response.data,hourheads);
-                    mtab.id="houtt";
-                    mtab.setAttribute("data-graph-container-before","1");
-                    mtab.setAttribute("data-graph-type","column");
+                    mtab = maketable(response.data, hourheads);
+                    mtab.id = "houtt";
+                    mtab.setAttribute("data-graph-container-before", "1");
+                    mtab.setAttribute("data-graph-type", "column");
                     document.getElementById("hourTable").appendChild(mtab);
                     $('#houtt').highchartTable();
 
@@ -101,48 +211,49 @@ axios.post('http://localhost:4545/basicstat',{})
                 .catch(function (error) {
                     console.log(error);
                 });
-    
+
             ev.preventDefault();
         }, false);
 
-    
-    function maketable(sortedtypes,headers){
-    let table = document.createElement('table');
-    let thead = document.createElement('thead');
-    let tbody = document.createElement('tbody');
-    let headerRow = document.createElement('tr');
-    headers.forEach(headerText => {
-        let header = document.createElement('th');
-        let textNode = document.createTextNode(headerText);
-        header.appendChild(textNode);
-        headerRow.appendChild(header);
-    });
-    thead.appendChild(headerRow);
-    sortedtypes.forEach(st => {
-        let row = document.createElement('tr');
-        Object.values(st).forEach(text => {
-            let cell = document.createElement('td');
-            let textNode = document.createTextNode(text);
-            cell.appendChild(textNode);
-            row.appendChild(cell);
-        })
-        tbody.appendChild(row);
-    });
-    table.appendChild(thead);
-    table.appendChild(tbody);
-    return table;
-}
 
-var ffrm = document.getElementById('fileform');
+        function maketable(sortedtypes, headers) {
+            let table = document.createElement('table');
+            let thead = document.createElement('thead');
+            let tbody = document.createElement('tbody');
+            let headerRow = document.createElement('tr');
+            headers.forEach(headerText => {
+                let header = document.createElement('th');
+                let textNode = document.createTextNode(headerText);
+                header.appendChild(textNode);
+                headerRow.appendChild(header);
+            });
+            thead.appendChild(headerRow);
+            sortedtypes.forEach(st => {
+                let row = document.createElement('tr');
+                Object.values(st).forEach(text => {
+                    let cell = document.createElement('td');
+                    let textNode = document.createTextNode(text);
+                    cell.appendChild(textNode);
+                    row.appendChild(cell);
+                })
+                tbody.appendChild(row);
+            });
+            table.appendChild(thead);
+            table.appendChild(tbody);
+            return table;
+        }
+
+        var ffrm = document.getElementById('fileform');
         ffrm.addEventListener('submit', function (ev) {
-            
+
             let vormData = new FormData(ffrm);
             lmao = Object.fromEntries(vormData);
             console.log(lmao);
             axios.post('http://localhost:4545/jsonPOIS', lmao, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        }})
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                }
+            })
                 .then(function (response) {
                     console.log(response.data);
 
@@ -150,17 +261,18 @@ var ffrm = document.getElementById('fileform');
                 .catch(function (error) {
                     console.log(error);
                 });
-    
+
             ev.preventDefault();
         }, false);
 
         var derm = document.getElementById('redbutton');
         derm.addEventListener('submit', function (ev) {
-            
+
             axios.post('http://localhost:4545/hiroshima');
-                
-    
+
+
             ev.preventDefault();
         }, false);
 
-</script>
+    </script>
+</body>

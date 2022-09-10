@@ -520,7 +520,7 @@ async function dangerous_visit_count_per_hour(db, hour) {
             }
         },
         { $match: { $and: [{ $expr: { $gt: ["$timestamp", "$weeksick"] } }, { $expr: { $lt: ["$timestamp", "$doublesick"] } }] } },
-        { $match: { "timestamp": hour } },
+        
         { $group: { _id: { $hour: "$timestamp" }, n: { $sum: 1 } } },
 
     ]).toArray()
@@ -570,7 +570,9 @@ async function daytostat(db,day){
 
 async function hourtostat(db,day){
     let vc= normHours(await visit_count_per_hour(db,day));
-    let dc= normHours(await dangerous_visit_count_per_hour(db,day));
+    let dvcph=await dangerous_visit_count_per_hour(db,day)
+    let dc= normHours(dvcph);
+    console.log(dvcph);
     lem=[];
     for(i=0;i<24;i++)lem.push({hou:i,vis:vc[i].n,dis:dc[i].n});
     return lem;

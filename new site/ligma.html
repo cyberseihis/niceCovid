@@ -92,7 +92,7 @@ button:hover {
  </style>
 </head>
 <body>
-    <div style="position :absolute;top:5%;left:35%;z-index:2174;display:block;" >
+    <div style="position :relative;z-index:2174;display:block;min-width: 10px;width: fit-content;margin: auto;" >
         <ul>
             <li><a href="ligma.html" class="active">Home</a></li>
             <li><a href="report.html"> Covid Case Report</a></li>
@@ -102,10 +102,10 @@ button:hover {
     </div>
     
 
-<div>
-    <box style="position :absolute;top:2%;left:5%;z-index:2174;display:block">
-<p id="p2" style="position :absolute;top:-31%;left:5%;z-index:2174;display:block;font-size: 14px;">Search for types of POIs to visit:</p>
-<form id="srch_form" name="nice_form" method="post" style="position :absolute;top:40%;left:5%;z-index:2174;display:block">
+
+    <box style="position :absolute;top:8%;left:5%;z-index:2174;display:block">
+<p id="p2" style="position :absolute;top:-25%;left:5%;z-index:2174;display:block;font-size: 14px;">Search for types of POIs to visit:</p>
+<form id="srch_form" name="nice_form" method="post" style="position :absolute;top:34%;left:5%;z-index:2174;display:block">
     <select name="poitype" style="border-radius: 25px">
         <option value="cafe">cafe</option><option value="food">food</option><option value="point_of_interest">point_of_interest</option>
         <option value="establishment">establishment</option><option value="restaurant">restaurant</option><option value="convenience_store">convenience_store</option>
@@ -143,7 +143,7 @@ button:hover {
         </div>
         <button onclick="hidepopup()" class="xbutton">x</button>
     </div>
-</div>
+
     <script src= "coordinates.js"></script>
     <script>
 
