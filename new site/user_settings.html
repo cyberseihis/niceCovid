@@ -16,6 +16,12 @@
     background-color: #333;
     border-radius:  0px 0px 12px 12px;
 }
+ol{
+  display:grid;
+  list-style-type: lower-alpha;
+  text-align: center;
+}
+
 li a {
   color: white;
   text-align: center;
@@ -34,24 +40,24 @@ li a:hover {
   hr {width: 75%;margin-left: auto;margin-right: auto;}
   .para
 	{
-        color: rgb(44, 44, 68);
+        color: white;
 	      font-size: 30px;
         font-weight: bold;
         max-height: 1500px;	
-        background-color: rgb(112, 250, 204);
+        background-color: rgb(87, 87, 230);
         margin: 0 auto; 
         border-radius:   12px 12px 0px 0px;
 	}
 div.outset {border-style: outset;}
-div.fixed {
-  position: fixed;
-  width: 100%;
-  bottom: 10px;
-}
+.paracode
+	{
+        color: rgb(87, 87, 230);
+	      font-size: 13px;	
+	}
 </style>
 </head>
 <body>
-  <p style="text-align: center;" class="para">User Settings</p>
+  <p style="text-align: center;" class="para">Covid Traces</p>
     <div style="text-align:center">
         <ul>
             <li><a href="mapscreen.html">Home</a></li>
@@ -60,7 +66,8 @@ div.fixed {
             <li><a href="user_settings.html" class = "active">User Settings</a></li>
           </ul>
     </div><br>
-    <form id="log_form" name="nice_form" method="post">
+    <p style="text-align:center;font-weight: bold;color: rgb(23, 66, 94);font-size: larger;">In the following form you can change your username and your password accordingly.</p>
+    <form id="log_form" name="nice_form" method="post" style="text-align:center;">
       Username:
       <input name="user" type="text"><br><br><br>
       Password:
@@ -68,25 +75,14 @@ div.fixed {
       <input type="checkbox" onclick="passfunc()"><span1 class="paracode">Show Password</span1><br><br>
   
       <input id="epibebaiosi" type="submit" class="button" value="Submit"><br><br>
-  
-     
-     
-      
   </form>
   <p id="p1"></p>
 
-    oi episkepseis mou
-
-    <ol id="mystory"></ol>
-    <br>
-    oi dhlwseis mou
-    <ol id="mydeath"></ol>
-
-    <div class="fixed">
-      <hr>
-    <p id="p2" style="position:relative; left:1050px; font-size: 15px;">CovidTraces - Your Covid tracing website</p>
-    </div>   
-    
+  <p style="text-align:center;font-weight: bold;color: rgb(23, 66, 94);font-size: larger;">Visits History:</p>
+  <ol id="mystory"></ol><br>
+  <p style="text-align:center;font-weight: bold;color: rgb(23, 66, 94);font-size: larger;">Reports History:</p>
+  <ol id="mydeath" ></ol>
+ 
     <script>
       var favoriteMovie = sessionStorage.getItem('favoriteMovie');
       favoriteMovie = "62fbf36813f65684eee1746c";

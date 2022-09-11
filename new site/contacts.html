@@ -9,44 +9,6 @@
       display: inline;
       margin: 0px;
     }
-    .split {
-    height: 100%;
-    width: 50%;
-    position: fixed;
-    z-index: 1;
-    top: 0;
-    overflow-x: hidden;
-    padding-top: 20px;
-  }
-  
-  .left {
-    left: 0;
-    background-color: rgb(255, 255, 255);
-  }
-  
-  .right {
-    right: 0;
-    background-color: #ECECEC;
-  }
-  .centered {
-  position: absolute;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-}
-
-.centered img {
-  width: 20px;
-  border-radius: 20%;
-}
-.center_img {
-  position: absolute;
-  top: 30%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-}
 .para2
 	{
         color: rgb(87, 87, 230);
@@ -106,18 +68,11 @@
     div.outset {
       border-style: outset;
     }
-
-    div.fixed {
-      position: fixed;
-      width: 100%;
-      bottom: 10px;
-    }
-  
   </style>
 </head>
 
 <body>
-  <p style="text-align: center;" class="para">Possible Contacts</p>
+  <p style="text-align: center;" class="para">Covid Traces</p>
   <div style="text-align:center">
     <ul>
       <li class="menud"><a href="mapscreen.html">Home</a></li>
@@ -127,12 +82,9 @@
     </ul>
   </div><br>
   
-    <ol id="threats"></ol>
-
-  <div class="fixed">
-    <hr>
-    <p id="p2" style="position:relative; left:1050px; font-size: 15px;">CovidTraces - Your Covid tracing website</p>
-  </div>
+  <p id="p1" style="text-align:center;font-weight: bold;color: rgb(23, 66, 94);font-size: larger;">Here is a list of visits you made that an another Covid case had had too in a span of 7 days.</p>
+  <p id="p1" style="text-align:center;font-weight: bold;color: rgb(23, 66, 94);font-size: small;">This is used in order to track your visits and possible dangerous contacts you may have had.</p><br>
+  <ol id="threats"></ol>
 
   <script>
     var favoriteMovie = sessionStorage.getItem('favoriteMovie');

@@ -80,7 +80,7 @@ mongoClient.connect('mongodb+srv://panos:5555p@cluster30.et1yr.mongodb.net/test'
     app.use("/report",bodyParser.urlencoded({ extended: false }),bodyParser.json());
     app.post("/report",async function(req,res){
       console.log(req.body)
-      if(await tools.check_within_14_days(db,mongo.ObjectId(req.body.userid))) res.send("already sick");
+      if(await tools.check_within_14_days(db,mongo.ObjectId(req.body.userid))) res.send("You are already diagnosed sick!");
       else{
       tools.Catch_covid(db,mongo.ObjectId(req.body.userid),new Date(req.body.diagnosed));
       res.send("nice covid");}

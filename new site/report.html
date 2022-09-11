@@ -70,31 +70,28 @@
       border-style: outset;
     }
 
-    div.fixed {
-      position: fixed;
-      width: 100%;
-      bottom: 10px;
-    }
   </style>
 </head>
 <body>
-  <p style="text-align: center;" class="para">Covid Case Report</p>
+  <p style="text-align: center;" class="para">Covid Traces</p>
     <div style="text-align:center">
         <ul>
             <li class="menud"><a href="mapscreen.html">Home</a></li>
-            <li class="menud"><a href="report.html">Covid Case Report</a></li>
+            <li class="menud"><a href="report.html" class="active">Covid Case Report</a></li>
             <li class="menud"><a href="contacts.html">Possible Contacts</a></li>
             <li class="menud"><a href="user_settings.html">User Settings</a></li>
           </ul>
-    </div><br>
+    </div><br><br><br><br>
     
 
-    <div style= "border: solid;border-color: #333;">
-     <p id="p1" style="text-align:center">report diagnosis</p>
+    <div >
+     <p id="p1" style="text-align:center;font-weight: bold;color: rgb(23, 66, 94);font-size: larger;">Filling the following form you are reporting that you are a Covid-19 case in the website's database!</p><br>
+     
      <form id="covid_form" name="nice_form" method="post" style="text-align:center">
-       <input type="date" name="diagnosed">
-       <input id="epibebaiosi" type="submit">
-     </form>
+       <input type="date" name="diagnosed" style="border-radius: 25px;">
+       <input id="epibebaiosi" type="submit" value="Submit" style="border-radius: 25px;background-color: rgb(87, 87, 230);color: #ffffff;border-color:rgb(87, 87, 230)">
+     </form><br>
+     <p style="text-align:center;color: black;font-size:x-small">Please note that you can't report a new Covid-19 case unless 14 days from your last report have past! </p>
     </div>
     <script>
       var favoriteMovie = sessionStorage.getItem('favoriteMovie');
