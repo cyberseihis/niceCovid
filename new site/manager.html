@@ -8,6 +8,7 @@
     <link href='https://fonts.googleapis.com/css?family=Asap' rel='stylesheet'>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <style>
+        /*css*/
         body {
             background-color: #E0E0E0;
             font-family: 'Asap';
@@ -112,17 +113,17 @@
     <p style="text-align: center;" class="para">Admin Settings</p>
     
     <p style="text-align:center;font-weight: bold;color: rgb(23, 66, 94);font-size: larger;">Upload files from here by choosing the file and submiting it.</p>
-
+    <!--Upload files form-->
     <form id="fileform" encytpe="multipart/form-data" style="text-align:center">
         <input type="file" name="jzon" >
         <input type="submit" value="Submit" style="border-radius: 25px;background-color: rgb(87, 87, 230);color: #ffffff;border-color:rgb(87, 87, 230)">
     </form><br><hr style="color: rgb(23, 66, 94);">
-
+    <!--Delete all button-->
     <p style="text-align:center;font-weight: bold;color: rgb(23, 66, 94);font-size: larger;">DANGER!This button deletes all the POIs And Visits in the database!</p>
     <form id="redbutton" encytpe="multipart/form-data" style="text-align:center;" >
         <input type="submit" value="X" style="text-align:center;width: 300px;color: white;border-radius: 10px;transition: all .5s;background-color:  rgb(182, 29, 29);border-color: rgb(182, 29, 29);">
     </form><br><hr style="color: rgb(23, 66, 94);">
-
+    <!--Stats-->
     <p style="text-align:center;font-weight: bold;color: rgb(23, 66, 94);font-size: larger;">Number of total Visits,Cases and dangerous Visits:</p>
     <p style="text-align:center">Total  number of Visits:</p>
     <p id="tv" style="text-align:center"></p>
@@ -130,15 +131,15 @@
     <p id="cc" style="text-align:center"></p>
     <p style="text-align:center">Total number of dangerous Visits:</p>
     <p id="dv" style="text-align:center"></p><br>
-
+    <!--Tables-->
     <p style="text-align:center;font-weight: bold;color: black;font-size: small;">Table 1.1: Number of visits for the various types of POIs.</p>
     <div id="visTable"></div><br><br>
-
+    <!--Tables-->
     <p style="text-align:center;font-weight: bold;color: black;font-size: small;">Table 1.2: Number of dangerous visits for the various types of POIs.</p>
     <div id="dangerTable"></div><br><br><hr style="color: rgb(23, 66, 94);">
 
     <p style="text-align:center;font-weight: bold;color: rgb(23, 66, 94);font-size: larger;">Choose the date range(month,week) of the  tables and diagramms:</p>
-
+    <!--Radio button to pick week or month for the display of the graphs-->
     <form id="dateradio" style="text-align:center">
         <input id="monradio" type="radio" name="dra" value="month">
         <label for="monradio">Month</label>
@@ -147,15 +148,16 @@
         <input type="submit" value="Submit" style="border-radius: 25px;background-color: rgb(87, 87, 230);color: #ffffff;border-color:rgb(87, 87, 230)">
     </form><br>
     <p style="text-align:center;font-weight: bold;color: black;font-size: small;">Diagramm 1.1: Number of visits (blue color) and confirmed Covid cases visits (red color).</p>
-
+    <!--Month Graph-->
     <div id="timeTable"></div><br><hr style="color: rgb(23, 66, 94);">
 
-    <!---hour form-->   
+    <!---hour form used for the display of the hour graph of the visits and covid visits-->   
     <p style="text-align:center;font-weight: bold;color: rgb(23, 66, 94);font-size: larger;">Choose the date range (hour) of the  tables and diagramms:</p>
     <form id="hour_form" name="nice_form" method="post" style="text-align:center">
         <input type="date" name="calendar" style="border-radius: 25px;">
         <input id="epibebaiosi" type="submit" value="Submit" style="border-radius: 25px;background-color: rgb(87, 87, 230);color: #ffffff;border-color:rgb(87, 87, 230)">
     </form><br>
+    <!--Hour Graph-->
     <p style="text-align:center;font-weight: bold;color: black;font-size: small;">Diagramm 1.2: Number of hourly visits (blue color) and confirmed Covid cases hourly visits (red color).</p>
     <div id="hourTable"></div>
 
@@ -166,7 +168,7 @@
         dtypeheads = ["Types of POIs", "DangerousVisits"];
         grapheads = ["Date", "Visits", "Covid Visits"];
         hourheads = ["Hour", "Visits", "Covid Visits"];
-
+//reference to specific part of the server for the communication
         axios.post('http://localhost:4545/basicstat', {})
             .then(function (response) {
                 stats = response.data;
@@ -176,7 +178,7 @@
                 document.getElementById("visTable").appendChild(maketable(stats.d, typeheads));
                 document.getElementById("dangerTable").appendChild(maketable(stats.e, dtypeheads));
             })
-
+//reference to specific part of the server for the communication
         var vorm = document.getElementById('dateradio');
         vorm.addEventListener('submit', function (ev) {
             document.getElementById("timeTable").innerHTML = "";
@@ -199,7 +201,7 @@
 
             ev.preventDefault();
         }, false);
-
+//reference to specific part of the server for the communication
         var verm = document.getElementById('hour_form');
         verm.addEventListener('submit', function (ev) {
             document.getElementById("hourTable").innerHTML = "";
@@ -223,7 +225,7 @@
             ev.preventDefault();
         }, false);
 
-
+//functions for the making of tables
         function maketable(sortedtypes, headers) {
             let table = document.createElement('table');
             let thead = document.createElement('thead');
@@ -250,7 +252,7 @@
             table.appendChild(tbody);
             return table;
         }
-
+//reference to specific part of the server for the communication. in this occation for the file upload
         var ffrm = document.getElementById('fileform');
         ffrm.addEventListener('submit', function (ev) {
 
@@ -272,7 +274,7 @@
 
             ev.preventDefault();
         }, false);
-
+//reference to specific part of the server for the communication.In this occation for the red button that deletes everything
         var derm = document.getElementById('redbutton');
         derm.addEventListener('submit', function (ev) {
 

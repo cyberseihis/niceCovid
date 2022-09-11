@@ -1,3 +1,5 @@
+//This is used to test the functionabilty of the functions individually
+
 const mongo=require("mongodb");
 const mongoClient = mongo.MongoClient;
 var tools = require('./functions.js');

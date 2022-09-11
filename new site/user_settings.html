@@ -4,6 +4,7 @@
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <link href='https://fonts.googleapis.com/css?family=Asap' rel='stylesheet'>
   <style>
+    /*css*/
        li {
     display: inline;
     margin: 0px;
@@ -36,7 +37,6 @@ li a:hover {
 }
 
   body {background-color: #ffffff; font-family: 'Asap'}
-  /*hr { display: block;  overflow: hidden; border-style: inset; border-width: 1px;}*/
   hr {width: 75%;margin-left: auto;margin-right: auto;}
   .para
 	{
@@ -67,6 +67,7 @@ div.outset {border-style: outset;}
           </ul>
     </div><br>
     <p style="text-align:center;font-weight: bold;color: rgb(23, 66, 94);font-size: larger;">In the following form you can change your username and your password accordingly.</p>
+    <!--change credentials form-->
     <form id="log_form" name="nice_form" method="post" style="text-align:center;">
       Username:
       <input name="user" type="text"><br><br><br>
@@ -90,7 +91,7 @@ div.outset {border-style: outset;}
       var list_19 = document.getElementById('mydeath');
 
   
-  
+  //reference to specific part of the server for the communication.
       axios.post('http://localhost:4545/mystory', { userid: favoriteMovie })
         .then(function (response) {
           console.log(response.data);
@@ -114,6 +115,7 @@ div.outset {border-style: outset;}
   
     </script>
     <script>
+      //function for visual encoding of password when inserting it
     function passfunc() {
       var x = document.getElementById("myInput");
       if (x.type === "password") {
@@ -122,7 +124,7 @@ div.outset {border-style: outset;}
         x.type = "password";
       }
     }
-    
+    //reference to specific part of the server for the communication.In this occation for the log form
         var vorm = document.getElementById('log_form');
         vorm.addEventListener('submit', function (ev) {
             let vormData = new FormData(vorm);

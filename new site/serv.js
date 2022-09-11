@@ -86,7 +86,7 @@ mongoClient.connect('mongodb+srv://panos:5555p@cluster30.et1yr.mongodb.net/test'
       res.send("nice covid");}
 
     })
-
+    //Εντολές που χρησιμοποιούνται για την λίστα των πιθανών επαφών στην σελίδα contacts.
     app.use("/threats",cors());
     app.use("/threats",bodyParser.urlencoded({ extended: false }),bodyParser.json());
     app.post("/threats",async function(req,res){
@@ -95,7 +95,7 @@ mongoClient.connect('mongodb+srv://panos:5555p@cluster30.et1yr.mongodb.net/test'
       res.send(await Promise.all( threts.map(e=>tools.VisitToLine(db,e))));}
 
     )
-
+    //Εντολές που χρησιμοποιούνται για τις λίστες των συνολικών επισκέψεων και των report του χρήστη στην σελίδα user_settings 
     app.use("/mystory",cors());
     app.use("/mystory",bodyParser.urlencoded({ extended: false }),bodyParser.json());
     app.post("/mystory",async function(req,res){
@@ -108,7 +108,7 @@ mongoClient.connect('mongodb+srv://panos:5555p@cluster30.et1yr.mongodb.net/test'
 
     )
 
-
+    //Εντολές που καθιστούν δυνατή την αλλαγή των στοιχείων του χρήστη 
     app.use("/settings",cors());
     app.use("/settings",bodyParser.urlencoded({ extended: false }),bodyParser.json());
     app.post("/settings",async function(req,res){
@@ -119,7 +119,7 @@ mongoClient.connect('mongodb+srv://panos:5555p@cluster30.et1yr.mongodb.net/test'
     }
 
     )
-
+    //Εντολές που υπάχουν για τη χρήση του check_admin στο site μέσω του server 
     app.use("/admin",cors());
     app.use("/admin",bodyParser.urlencoded({ extended: false }),bodyParser.json());
     app.post("/admin",async function(req,res){
@@ -128,7 +128,7 @@ mongoClient.connect('mongodb+srv://panos:5555p@cluster30.et1yr.mongodb.net/test'
     }
 
     )
-
+    //graphs and tables
     app.use("/basicstat",cors());
     app.use("/basicstat",bodyParser.urlencoded({ extended: false }),bodyParser.json());
     app.post("/basicstat",async function(req,res){
@@ -137,7 +137,7 @@ mongoClient.connect('mongodb+srv://panos:5555p@cluster30.et1yr.mongodb.net/test'
     }
 
     )
-
+    //graphs
     app.use("/macrostats",cors());
     app.use("/macrostats",bodyParser.urlencoded({ extended: false }),bodyParser.json());
     app.post("/macrostats",async function(req,res){
@@ -146,7 +146,7 @@ mongoClient.connect('mongodb+srv://panos:5555p@cluster30.et1yr.mongodb.net/test'
     }
 
     )
-
+    //graphs and tables
     app.use("/microstats",cors());
     app.use("/microstats",bodyParser.urlencoded({ extended: false }),bodyParser.json());
     app.post("/microstats",async function(req,res){
@@ -160,9 +160,9 @@ mongoClient.connect('mongodb+srv://panos:5555p@cluster30.et1yr.mongodb.net/test'
 
     app.use("/jsonPOIS",cors());
     //app.use("/jsonPOIS",bodyParser.urlencoded({ extended: false }),bodyParser.json());
-  
+
+  //upload file
   app.post("/jsonPOIS",async function(req,res){
-    //console.log(req)
     if(!req.files) {res.send("nofiles")}
     else {
       let myfile=req.files.jzon;
@@ -175,7 +175,7 @@ mongoClient.connect('mongodb+srv://panos:5555p@cluster30.et1yr.mongodb.net/test'
     
   })
 
-
+  // επικοινωνία του server με το database για την κλήση του delete_POIs()
   app.use("/hiroshima",cors());
     app.use("/hiroshima",bodyParser.urlencoded({ extended: false }),bodyParser.json());
     app.post("/hiroshima",async function(req,res){
@@ -184,6 +184,6 @@ mongoClient.connect('mongodb+srv://panos:5555p@cluster30.et1yr.mongodb.net/test'
     }
 
     )
-
+  //website port
     app.listen(4545);
   })

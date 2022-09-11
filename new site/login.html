@@ -5,6 +5,7 @@
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <link href='https://fonts.googleapis.com/css?family=Asap' rel='stylesheet'>
   <style>
+    /*css*/
     body {
       font-family: 'Asap';
     }
@@ -56,7 +57,7 @@
 
 
 <p style="text-align: center;" class="para3">Covid Traces</p>
-
+<!--Login form-->
 <p id="p1" class="para" style="font-family: 'Asap';text-align: center;">Login</p><br>
 <form id="log_form" name="nice_form" method="post" style="text-align: center">
   Username:
@@ -79,7 +80,7 @@
   location,declaring visits and many more.</p>
 
 <script>
-
+//function for visual encoding of password when inserting it
   function passfunc() {
     var x = document.getElementById("myInput");
     if (x.type === "password") {
@@ -88,7 +89,7 @@
       x.type = "password";
     }
   }
-
+  //reference to specific part of the server for the communication.In this occation for the login
   var vorm = document.getElementById('log_form');
   vorm.addEventListener('submit', function (ev) {
     let vormData = new FormData(vorm);

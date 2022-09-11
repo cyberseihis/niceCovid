@@ -1,8 +1,9 @@
+//The functions of the Website
+
 const mongo = require("mongodb");
 const mongoClient = mongo.MongoClient;
 
-//const { isContext } = require("vm");
-
+// τα exports γίνονται για να μπορέσουμε να "τεστάρουμε" τισ συναρτήσεις στο functions_test.js και στον server.
 module.exports = {
     User_insertion: User_insertion,
     Add_visit: Add_visit,
@@ -39,7 +40,7 @@ module.exports = {
     graphdata: graphdata,
     hourtostat:hourtostat
 }
-
+//this function is used to search for the type of POIS inside the database
 async function searchPOIs(db, poiType, clientCoords) {
     let cursorPOI = await db.collection('POIs').find({
         types: poiType,
@@ -62,25 +63,26 @@ const asyncFilter = async (arr, predicate) =>
 
 //USER
 
+//this function is used check if the credentials that the user is inserting already exist in the database
 function Check_creds(db, usr_name, usr_password) {
     var myobj = { name: usr_name, password: usr_password };
     let hm = db.collection("User").findOne(myobj);
     return hm
 }
-
+//this function is used check if the credentials that the admin is inserting already exist in the database
 async function Check_Admin(db, adm_name, adm_password) {
     var myobj = { name: adm_name, password: adm_password };
     let hm = await db.collection("Admins").findOne(myobj);
     return hm
 }
 
-
+//this function allows the user to make an account on the website and save his credentials in the database
 function User_insertion(db, usr_name, usr_email, usr_password) {
     var myobj = { name: usr_name, password: usr_password, email: usr_email };
     hmm = db.collection("User").insertOne(myobj)
     return hmm
 }
-
+//this function is used to add a visit for a specific user
 function Add_visit(db, User_id, POI_Id) {
     var myobj = { user_id: User_id, POI_id: POI_Id, timestamp: new Date() };
     db.collection("Visit").insertOne(myobj, function (err, res) {
@@ -88,7 +90,7 @@ function Add_visit(db, User_id, POI_Id) {
         console.log("1 visit inserted");
     })
 }
-
+//this fynction is used to overwrite the population field iside a POI
 function Overwrite_population(db, POI_Id, population) {
     d = new Date();
     let day = (7 + d.getDay() - 1) % 7;
@@ -102,7 +104,7 @@ function Overwrite_population(db, POI_Id, population) {
         console.log("1 POI changed");
     })
 }
-
+//This function is used to add a new population etimation in a POI
 async function population_estimation(db, POI_Id, covid_time) {
     d = covid_time;
     let hour = d.getHours();
@@ -111,7 +113,7 @@ async function population_estimation(db, POI_Id, covid_time) {
     var myobj = { POI_id: POI_Id, timestamp: { $gte: d } };
     return await db.collection('Visit').find(myobj).toArray();
 }
-
+//This function is used to add a new covid case  
 function Catch_covid(db, User_id, pos_test_date) {
     var myobj = { user_id: User_id, Date: pos_test_date };
     db.collection("Covid_case").insertOne(myobj, function (err, res) {
@@ -119,7 +121,7 @@ function Catch_covid(db, User_id, pos_test_date) {
         console.log("1 covid_case inserted");
     })
 }
-
+//this fyncton checks if there is another covid case report added in the last 14 days
 async function check_within_14_days(db, User_Id) {
     let date = new Date();
     date.setDate(date.getDate() - 14)
@@ -127,7 +129,7 @@ async function check_within_14_days(db, User_Id) {
     var result = await db.collection("Covid_case").findOne(myobj);
     return (result != null)
 }
-
+//this function checks if there are any visits in a 7 day range
 function recent_visits(db, User_Id) {
     let date = new Date();
     date.setDate(date.getDate() - 7);
@@ -135,7 +137,7 @@ function recent_visits(db, User_Id) {
     var result = db.collection("Visit").find(myobj).toArray();
     return result;
 }
-
+//this function checks if there were other cases near the visit time of our user (-2,+2) hours
 async function adjacent_visitors(db, POI_Id, covid_time) {
     d = covid_time;
     let hour = d.getHours();
@@ -145,7 +147,7 @@ async function adjacent_visitors(db, POI_Id, covid_time) {
     var myobj = { POI_id: POI_Id, timestamp: { $gte: d, $lt: dp } };
     return await db.collection('Visit').find(myobj).toArray();
 }
-
+//this function checks if there is a case 7 days from the visit
 async function temporaly_sick(db, UserId, covidTime) {
     d = covidTime;
     let date_d = d.getDate();
@@ -155,39 +157,14 @@ async function temporaly_sick(db, UserId, covidTime) {
     let hm = await db.collection('Covid_case').find(myobj).toArray();
     if (hm.length == 0) return false; else return true;
 }
-
+//call of temporaly_sick() inside another function in order to use later in are_you_a_threat() function
 async function tem_si_help(db, adv) {
     let usid = adv.user_id;
     let tim = adv.timestamp;
     return await temporaly_sick(db, usid, tim);
 }
-
+//complete function for the number 6 question of the project
 async function are_you_a_threat(db, User_id) {
-    /*db.collection('Visit').aggregate([
-        {$match: {user_id: User_id}},
-        {$addFields: {coviddat: "$dangerousVisits.Date"}},
-        {
-            $project : { _id : 0, coviddat :1, timestamp:1,
-                weeksick : {$dateSubtract:
-                    {
-                       startDate: new Date(),
-                       unit: "day",
-                       amount: 7
-                    }}
-            }
-        },
-        {$match:{$expr:{$gt:["$timestamp", "$weeksick"]}}},
-        { $addFields : { foundation_year : { $lookup:
-            {
-              from: 'Visit',
-              localField: 'POI_id',
-              foreignField: 'POI_id',
-              as: 'same_pois'
-            } } } }
-    ]).toArray(function(err, res) {
-        if (err) throw err;
-        console.log(res);
-})*/
 
     async function hellp(a) { return tem_si_help(db, a) };
 
@@ -205,7 +182,7 @@ async function are_you_a_threat(db, User_id) {
     return await asyncFilter(rev, isvisitdanger);
 
 }
-
+//function in order the website in mapscreen.html to show the POI name instead of the _id when the marker popup occurs 
 async function PoiIdToName(db,poiid){
     let cursorPOI = await db.collection('POIs').find({
         _id: poiid
@@ -225,21 +202,21 @@ function recent_covid(db, UseriD) {
         console.log(res);
     })
 }
-
+//this function allows you to edit the credentials of a user
 async function edit_user(db, Usrid, user_name, user_pass) {
     var myobj = { _id: Usrid }
     var new_values = { $set: { name: user_name, password: user_pass } }
     tre =  await db.collection("User").updateOne(myobj, new_values);
     return tre;
 }
-
+//this function shows all the visits in a sorted order
 function all_my_visits(db, User_Id) {
     
     var myobj = { user_id: User_Id} ;
     var result = db.collection("Visit").find(myobj).sort( { "timestamp": -1 } ).toArray();
     return result;
 }
-
+//this function shows all the covid cases in a sorted order
 function all_my_sickness(db, User_Id) {
     
     var myobj = { user_id: User_Id} ;
@@ -249,6 +226,7 @@ function all_my_sickness(db, User_Id) {
 
 //ADMIN
 
+//this function allows th admin to change POIs details
 function change_POIs(db, jsonPOI) {
     db.collection("POIs").updateOne({ id: jsonPOI.id }, { "$set": jsonPOI },
         {
@@ -259,7 +237,7 @@ function change_POIs(db, jsonPOI) {
             console.log("POI details changed");
         })
 }
-
+//function for uploading a file to the website using bulk insertions
 function json_file_function(db, path) {
     const fs = require('fs');
     var data = JSON.parse(fs.readFileSync(path));
@@ -271,7 +249,7 @@ function json_file_function(db, path) {
    
     bulk.execute();
 }
-
+//this function deletes all the POIs and Visits in the database
 function delete_POIs(db) {
     db.collection("POIs").remove(
         {}, function (err, res) {
@@ -284,17 +262,17 @@ function delete_POIs(db) {
                 console.log("All Visits removed");
             })
 }
-
+//function to count all the visits
 async function total_count_visits(db) {
     var num = await db.collection("Visit").count();
     return num;
 }
-
+//function to count all the covid cases
 async function total_count_covids(db) {
     var num = await db.collection("Covid_case").count();
     return num;
 }
-
+//this function  finds all  the dangerous visits.The visits that were made by confirmed covid cases
 async function dangerous_visits(db) {
     j=await db.collection('Visit').aggregate([
         {
@@ -334,7 +312,7 @@ async function dangerous_visits(db) {
     ]).toArray();
     return j[0]?.total_covid_visits;
 }
-
+//this functon sorts the  various POI types from the POIs that the user has visited
 async function sortPOI_types(db) {
     j= await db.collection('Visit').aggregate([
         {
@@ -359,7 +337,7 @@ async function sortPOI_types(db) {
 
     return j;
 }
-
+//this functon sorts the  various POI types from the POIs that the user who had covid had visited
 async function sort_dangerous_POI_types(db) {
     j=await db.collection('Visit').aggregate([
         {
@@ -418,7 +396,7 @@ async function sort_dangerous_POI_types(db) {
     ]).toArray();
     return j;
 }
-
+//this function counts the visits per day
 async function visit_count_per_day(db, day) {
     j= await db.collection('Visit').aggregate([
         
@@ -427,7 +405,7 @@ async function visit_count_per_day(db, day) {
     ]).toArray();
     return j.length==0?0:j[0].numberOfVisits;
 }
-
+//this function counts the  dangerous visits per day
 async function dangerous_visit_count_per_day(db, day) {
     j= await db.collection('Visit').aggregate([
         {
@@ -470,7 +448,7 @@ async function dangerous_visit_count_per_day(db, day) {
     ]).toArray();
     return j.length==0?0:j[0].numberOfDangerousVisits;
 }
-
+//this function counts the visits per hour
 async function visit_count_per_hour(db, day) {
     
     j= await db.collection('Visit').aggregate([
@@ -482,7 +460,7 @@ async function visit_count_per_hour(db, day) {
     ]).toArray();
     return j;
 }
-
+//this function counts the dangerous visits per hour
 async function dangerous_visit_count_per_hour(db, hour) {
     return await db.collection('Visit').aggregate([
         { $project: { dai: { $dateToString: { format: "%Y-%m-%d", date: "$timestamp" } } ,_id:0,timestamp:1,user_id:1} },
@@ -525,7 +503,7 @@ async function dangerous_visit_count_per_hour(db, hour) {
 
     ]).toArray()
 }
-
+//this function is used to show the visits,the covid cases,the dangerous visits and the visits, dangerous visits according to specific types of POIS
 async function EveryStatistic(db){
     return {
         a:await total_count_visits(db),
@@ -535,7 +513,7 @@ async function EveryStatistic(db){
         e:await sort_dangerous_POI_types(db)
     }
 }
-
+//this function is used to calculate the days in a month (used in the graphs)
 function monthdays() {
     d= new Date();
     mont=[];
@@ -550,7 +528,7 @@ function monthdays() {
     return mont; 
 }
 
-
+//this function is used to calculate the days in a week(used in the graphs)
   function weekdays() {
     d= new Date();
     week=[];
@@ -563,11 +541,11 @@ function monthdays() {
     }
     return week; 
 }
-
+//used for graphs
 async function daytostat(db,day){
     return {date:day.toISOString().split('T')[0],visits:await visit_count_per_day(db,day),dvisits:await dangerous_visit_count_per_day(db,day)};
 }
-
+//used for graphs
 async function hourtostat(db,day){
     let vc= normHours(await visit_count_per_hour(db,day));
     let dvcph=await dangerous_visit_count_per_hour(db,day)
@@ -577,7 +555,7 @@ async function hourtostat(db,day){
     for(i=0;i<24;i++)lem.push({hou:i,vis:vc[i].n,dis:dc[i].n});
     return lem;
 }
-
+//used for graphs
 async function graphdata(db,datescope){
     dscope = datescope=="month"?monthdays:weekdays;
     datess=dscope();

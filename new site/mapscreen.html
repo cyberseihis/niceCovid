@@ -11,6 +11,7 @@
    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
    crossorigin=""></script>
    <style>
+    /*css*/
    li {
     display: inline;
     margin: 0px;
@@ -83,11 +84,12 @@ button:hover {
   color: #fff;
   border-radius: 10px 10px 0px 0px;
 }
+/*css used for the importing of the backround image before the loading of the map*/
 .leaflet-container {
     background-image:url("https://www.ertnews.gr/wp-content/uploads/2022/02/banner-covid-19-1280x549-1.jpg") !important;
-    background-position: center; /* Center the image */
-  background-repeat: no-repeat; /* Do not repeat the image */
-  background-size: cover; /* Resize the background image to cover the entire container */
+    background-position: center; 
+  background-repeat: no-repeat; 
+  background-size: cover; 
 }
  </style>
 </head>
@@ -102,7 +104,7 @@ button:hover {
     </div>
     
 
-
+<!-- Types of POIs Search Form-->
     <box style="position :absolute;top:8%;left:5%;z-index:2174;display:block">
 <p id="p2" style="position :absolute;top:-25%;left:5%;z-index:2174;display:block;font-size: 14px;">Search for types of POIs to visit:</p>
 <form id="srch_form" name="nice_form" method="post" style="position :absolute;top:34%;left:5%;z-index:2174;display:block">
@@ -127,6 +129,7 @@ button:hover {
 <span style="position :absolute;bottom: 0;left: 0;font-size: 17px;color: rgb(44, 44, 68);z-index:2174;display:block;">CovidTraces</span>
     <div id="map" style="height : 100%; width : 100%; top : 0; left : 0; position : absolute; z-index : 1;">
     </div>
+    <!--Popup-->
     <div id = "popup" style = "z-index: 2184;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%); background-color: rgba(255, 255, 255,0.8);border-radius: 10px;width:360px;display:none;">
         <div id="popupheader"></div>
         <p id="poiname" style="text-align:center;font-weight: bold;"></p>
@@ -143,10 +146,9 @@ button:hover {
         </div>
         <button onclick="hidepopup()" >x</button>
     </div>
-
     <script src= "coordinates.js"></script>
     <script>
-
+//marker colors
         var greenicon = L.divIcon({html: "<div style=\"background-color:green;border:3px solid rgba(255,255,255,0.5);width: 100%;height: 100%;border-radius:50%;line-height:30px;\"></div>",className: 'circle'});
         var orangeicon = L.divIcon({html: "<div style=\"background-color:orange;border:3px solid rgba(255,255,255,0.5);width: 100%;height: 100%;border-radius:50%;line-height:30px;\"></div>",className: 'circle'});
         var redicon = L.divIcon({html: "<div style=\"background-color:red;border:3px solid rgba(255,255,255,0.5);width: 100%;height: 100%;border-radius:50%;line-height:30px;\"></div>",className: 'circle'});
@@ -177,7 +179,7 @@ button:hover {
     </script>
     <script>
         var globalpoi;
-
+//functions used to calculate the minimum distance in order to put location borders
         function getDistanceFromLatLonInm(lat1, lon1, lat2, lon2) {
   var R = 6371; // Radius of the earth in km
   var dLat = deg2rad(lat2-lat1);  // deg2rad below
@@ -196,7 +198,7 @@ function deg2rad(deg) {
   return deg * (Math.PI/180)
 }
 
-
+//reference to specific part of the server for the communication.In this occation for the nvisit
         async function nVI(poy_id){
             axios.post('http://localhost:4545/nvisit', {pid: poy_id})
             .then(function (response) {
@@ -204,7 +206,7 @@ function deg2rad(deg) {
                 document.getElementById("nvisits").innerHTML = response.data.length;
             })
         }
-
+//function that manages the popup and its functionalities
         async function popupmanager(e){
             poy = e.target.alt;
             document.getElementById("poiname").innerHTML = poy.name;
@@ -242,7 +244,7 @@ function deg2rad(deg) {
             document.getElementById("popup").style="z-index: 2184;position: absolute;top: 25%;left: 25%;background-color: rgba(255, 255, 255,0.8);display: none;border-radious";
 
         }
-
+        //reference to specific part of the server for the communication.In this occation for the search form
         var vorm = document.getElementById('srch_form');
         vorm.addEventListener('submit', function (ev) {
             let vormData = new FormData(vorm);
@@ -268,7 +270,7 @@ function deg2rad(deg) {
                 })
             ev.preventDefault();
         }, false);
-    
+        //reference to specific part of the server for the communication.In this occation for the visit form  
         var varm = document.getElementById('visit_form');
         varm.addEventListener('submit', function (ev) {
             let vormData = new FormData(varm);
