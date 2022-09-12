@@ -101,7 +101,7 @@
         if (response.data == "") {
           document.getElementById("p2").innerHTML = "Wrong credentials were inserted!";
         } else {
-          sessionStorage.setItem("favoriteMovie", JSON.stringify(response.data));
+          sessionStorage.setItem("favoriteMovie", response.data._id);
           window.location.replace("mapscreen.html");
         }
       })
