@@ -38,7 +38,8 @@ module.exports = {
     Check_Admin: Check_Admin,
     EveryStatistic: EveryStatistic,
     graphdata: graphdata,
-    hourtostat:hourtostat
+    hourtostat:hourtostat,
+    isvisitdanger: isvisitdanger
 }
 //this function is used to search for the type of POIS inside the database
 async function searchPOIs(db, poiType, clientCoords) {
@@ -163,23 +164,26 @@ async function tem_si_help(db, adv) {
     let tim = adv.timestamp;
     return await temporaly_sick(db, usid, tim);
 }
+
+async function isvisitdanger(db,x) {
+    let pid = x.POI_id;
+    let tim = x.timestamp;
+    let advs = await adjacent_visitors(db, pid, tim);
+    //console.log(advs)
+    sickos=await asyncFilter(advs, async a=>tem_si_help(db, a));
+    //console.log(sickos);
+    if(sickos.length>0) return true; else return false;
+}
+
 //complete function for the number 6 question of the project
 async function are_you_a_threat(db, User_id) {
 
-    async function hellp(a) { return tem_si_help(db, a) };
+    //async function hellp(a) { return tem_si_help(db, a) };
 
     rev = await recent_visits(db, User_id);
-    console.log("recentvisits",rev)
-    async function isvisitdanger(x) {
-        let pid = x.POI_id;
-        let tim = x.timestamp;
-        let advs = await adjacent_visitors(db, pid, tim);
-        //console.log(advs)
-        sickos=await asyncFilter(advs, hellp)
-        //console.log(sickos);
-        if(sickos.length>0) return true; else return false;
-    }
-    return await asyncFilter(rev, isvisitdanger);
+    //console.log("recentvisits",rev)
+    
+    return await asyncFilter(rev, async a=> isvisitdanger(db,a));
 
 }
 //function in order the website in mapscreen.html to show the POI name instead of the _id when the marker popup occurs 
@@ -191,7 +195,7 @@ async function PoiIdToName(db,poiid){
 }
 
 async function VisitToLine(db,viss){
-    el={location:await PoiIdToName(db,viss.POI_id),time:viss.timestamp}
+    el={location:await PoiIdToName(db,viss.POI_id),time:viss.timestamp.toLocaleString()}
     return el
 }
 

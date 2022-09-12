@@ -104,7 +104,8 @@ mongoClient.connect('mongodb+srv://panos:5555p@cluster30.et1yr.mongodb.net/test'
       av= await tools.all_my_visits(db,mouser);
       avisits = await Promise.all(av.map(e=>tools.VisitToLine(db,e)));
       asicks = await tools.all_my_sickness(db,mouser);
-      res.send({allvisits:avisits,allsick:asicks});}
+      drakes=asicks.map(as=>{return {s:as.Date.toLocaleString()}});
+      res.send({allvisits:avisits,allsick:drakes});}
 
     )
 

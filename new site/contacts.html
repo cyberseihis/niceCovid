@@ -69,6 +69,27 @@
     div.outset {
       border-style: outset;
     }
+    table,
+        th,
+        td {
+            border: 1px solid;
+            text-align: center;
+        }
+
+        table {
+            margin: auto;
+            width: 50%;
+            max-width: 50%;
+            min-width: fit-content;
+            border-collapse: collapse;
+        }
+        th {
+  background-color: rgb(87, 87, 230);
+  color: white;
+}
+    tr:hover{
+        background-color: rgb(240, 230, 94);
+    }
   </style>
 </head>
 
@@ -86,7 +107,7 @@
   <p id="p1" style="text-align:center;font-weight: bold;color: rgb(23, 66, 94);font-size: larger;">Here is a list of visits you made that an another Covid case had had too in a span of 7 days.</p>
   <p id="p1" style="text-align:center;font-weight: bold;color: rgb(23, 66, 94);font-size: small;">This is used in order to track your visits and possible dangerous contacts you may have had.</p><br>
   <!--contacts list-->
-  <ol id="threats"></ol>
+  <div id="threats" ></div>
 
   <script>
     var favoriteMovie = sessionStorage.getItem('favoriteMovie');
@@ -97,17 +118,45 @@
     axios.post('http://localhost:4545/threats', { userid: favoriteMovie })
       .then(function (response) {
         console.log(response.data);
-        for (threat of response.data) {
+        /*for (threat of response.data) {
           entry = document.createElement('li');
           loc=threat.location;
           tim=threat.time;
           entry.appendChild(document.createTextNode("Location: "+loc+", Time of visit: "+tim));
           list.appendChild(entry);
-        }
+        }*/
+        
+        let mtab=maketable(response.data,["Location","Time"]);
+        document.getElementById("threats").appendChild(mtab);
       })
 
 
-
+      function maketable(sortedtypes, headers) {
+            let table = document.createElement('table');
+            let thead = document.createElement('thead');
+            let tbody = document.createElement('tbody');
+            let headerRow = document.createElement('tr');
+            headers.forEach(headerText => {
+                let header = document.createElement('th');
+                let textNode = document.createTextNode(headerText);
+                header.appendChild(textNode);
+                headerRow.appendChild(header);
+            });
+            thead.appendChild(headerRow);
+            sortedtypes.forEach(st => {
+                let row = document.createElement('tr');
+                Object.values(st).forEach(text => {
+                    let cell = document.createElement('td');
+                    let textNode = document.createTextNode(text);
+                    cell.appendChild(textNode);
+                    row.appendChild(cell);
+                })
+                tbody.appendChild(row);
+            });
+            table.appendChild(thead);
+            table.appendChild(tbody);
+            return table;
+        }
   </script>
 
 </body>
