@@ -65,9 +65,9 @@ const asyncFilter = async (arr, predicate) =>
 //USER
 
 //this function is used check if the credentials that the user is inserting already exist in the database
-function Check_creds(db, usr_name, usr_password) {
+async function Check_creds(db, usr_name, usr_password) {
     var myobj = { name: usr_name, password: usr_password };
-    let hm = db.collection("User").findOne(myobj);
+    let hm = await db.collection("User").findOne(myobj);
     return hm
 }
 //this function is used check if the credentials that the admin is inserting already exist in the database
@@ -78,9 +78,9 @@ async function Check_Admin(db, adm_name, adm_password) {
 }
 
 //this function allows the user to make an account on the website and save his credentials in the database
-function User_insertion(db, usr_name, usr_email, usr_password) {
+async function User_insertion(db, usr_name, usr_email, usr_password) {
     var myobj = { name: usr_name, password: usr_password, email: usr_email };
-    hmm = db.collection("User").insertOne(myobj)
+    hmm = await db.collection("User").insertOne(myobj)
     return hmm
 }
 //this function is used to add a visit for a specific user
