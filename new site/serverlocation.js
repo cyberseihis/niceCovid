@@ -1,1 +1,1 @@
-var servloc = 'http://localhost:4545';
+var servloc = true?'https://nicecovid.onrender.com':'http://localhost:4545';
