@@ -7,6 +7,7 @@
     <script src="http://code.highcharttable.org/2.0.0/jquery.highchartTable-min.js" type="text/javascript"></script>
     <link href='https://fonts.googleapis.com/css?family=Asap' rel='stylesheet'>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="serverlocation.js"></script>
     <style>
         /*css*/
         body {
@@ -169,7 +170,7 @@
         grapheads = ["Date", "Visits", "Covid Visits"];
         hourheads = ["Hour", "Visits", "Covid Visits"];
 //reference to specific part of the server for the communication
-        axios.post('http://localhost:4545/basicstat', {})
+        axios.post(servloc+'/basicstat', {})
             .then(function (response) {
                 stats = response.data;
                 document.getElementById("tv").innerHTML = stats.a;
@@ -185,7 +186,7 @@
             let vormData = new FormData(vorm);
             lmao = Object.fromEntries(vormData);
             console.log(lmao);
-            axios.post('http://localhost:4545/macrostats', lmao)
+            axios.post(servloc+'/macrostats', lmao)
                 .then(function (response) {
                     mtab = maketable(response.data, grapheads);
                     mtab.id = "timett";
@@ -208,7 +209,7 @@
             let vormData = new FormData(verm);
             lmao = Object.fromEntries(vormData);
             console.log(lmao);
-            axios.post('http://localhost:4545/microstats', lmao)
+            axios.post(servloc+'/microstats', lmao)
                 .then(function (response) {
                     mtab = maketable(response.data, hourheads);
                     mtab.id = "houtt";
@@ -259,7 +260,7 @@
             let vormData = new FormData(ffrm);
             lmao = Object.fromEntries(vormData);
             console.log(lmao);
-            axios.post('http://localhost:4545/jsonPOIS', lmao, {
+            axios.post(servloc+'/jsonPOIS', lmao, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 }
@@ -278,7 +279,7 @@
         var derm = document.getElementById('redbutton');
         derm.addEventListener('submit', function (ev) {
 
-            axios.post('http://localhost:4545/hiroshima');
+            axios.post(servloc+'/hiroshima');
 
 
             ev.preventDefault();

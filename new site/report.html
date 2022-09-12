@@ -2,6 +2,7 @@
 <head >
   <title>Report</title>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="serverlocation.js"></script>
   <link href='https://fonts.googleapis.com/css?family=Asap' rel='stylesheet'>
   <style>
     /*css*/
@@ -103,7 +104,7 @@
         let vormData = new FormData(vorm);
         lmao = Object.fromEntries(vormData);
         lmao.userid = window.favoriteMovie;
-        axios.post('http://localhost:4545/report', lmao)
+        axios.post(servloc+'/report', lmao)
             .then(function (response) {
                 console.log(response.data);
             })

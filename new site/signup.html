@@ -2,6 +2,7 @@
 <head >
   <title>SignUp</title>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="serverlocation.js"></script>
   <link href='https://fonts.googleapis.com/css?family=Asap' rel='stylesheet'>
   <style>
     /*css*/
@@ -93,7 +94,7 @@ function passfunc() {
     vorm.addEventListener('submit', function (ev) {
         let vormData = new FormData(vorm);
         lmao = Object.fromEntries(vormData);
-        axios.post('http://localhost:4545/sign', lmao)
+        axios.post(servloc+'/sign', lmao)
             .then(function (response) {
                 console.log(response.data);
                 if(response.data=="error_dup"){

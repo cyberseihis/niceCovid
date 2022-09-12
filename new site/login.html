@@ -3,6 +3,7 @@
 <head>
   <title>Login</title>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="serverlocation.js"></script>
   <link href='https://fonts.googleapis.com/css?family=Asap' rel='stylesheet'>
   <style>
     /*css*/
@@ -94,7 +95,7 @@
   vorm.addEventListener('submit', function (ev) {
     let vormData = new FormData(vorm);
     lmao = Object.fromEntries(vormData);
-    axios.post('http://localhost:4545/login', lmao)
+    axios.post(servloc+'/login', lmao)
       .then(function (response) {
         console.log(response.data);
         if (response.data == "") {

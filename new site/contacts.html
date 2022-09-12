@@ -3,6 +3,7 @@
 <head>
   <title>Possible Contacts</title>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="serverlocation.js"></script>
   <link href='https://fonts.googleapis.com/css?family=Asap' rel='stylesheet'>
   <style>
     /*css*/
@@ -115,7 +116,7 @@
     var list = document.getElementById('threats');
 
 
-    axios.post('http://localhost:4545/threats', { userid: favoriteMovie })
+    axios.post(servloc+'/threats', { userid: favoriteMovie })
       .then(function (response) {
         console.log(response.data);
         /*for (threat of response.data) {

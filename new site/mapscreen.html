@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <head >
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    
     <title>Main page</title>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="serverlocation.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
     integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
     crossorigin=""/>
@@ -166,7 +167,7 @@ button:hover {
         window.marks = [];
         window.favoriteMovie = sessionStorage.getItem('favoriteMovie');
         document.getElementById("sss").innerHTML = window.favoriteMovie;
-        /*axios.post('http://localhost:4545/poi', {})
+        /*axios.post(servloc+'/poi', {})
             .then(function (response) {
                 for(pooi of response.data){
                 cords = [pooi.coordinates.lat,pooi.coordinates.lng]
@@ -200,7 +201,7 @@ function deg2rad(deg) {
 
 //reference to specific part of the server for the communication.In this occation for the nvisit
         async function nVI(poy_id){
-            axios.post('http://localhost:4545/nvisit', {pid: poy_id})
+            axios.post(servloc+'/nvisit', {pid: poy_id})
             .then(function (response) {
                 console.log(JSON.stringify( response.data));
                 document.getElementById("nvisits").innerHTML = response.data.length;
@@ -250,7 +251,7 @@ function deg2rad(deg) {
             let vormData = new FormData(vorm);
             lmao = Object.fromEntries(vormData);
            
-            axios.post('http://localhost:4545/searchpoi', lmao)
+            axios.post(servloc+'/searchpoi', lmao)
                 .then(function (response) {
                     for(pm of window.marks){
                         pm.remove();
@@ -277,7 +278,7 @@ function deg2rad(deg) {
             lmao = Object.fromEntries(vormData);
             lmao.poivisti = window.globalpoi;
             lmao.userid=window.favoriteMovie;
-            axios.post('http://localhost:4545/visitor', lmao)
+            axios.post(servloc+'/visitor', lmao)
                 .then(function (response) {
                     console.log(response.data)
                     
